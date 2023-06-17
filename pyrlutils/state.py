@@ -28,7 +28,7 @@ class ContinuousState(State):
         try:
             assert (ranges.dtype == np.float64) or (ranges.dtype == np.float32) or (ranges.dtype == np.float16)
         except AssertionError:
-            raise ValueError('It has to be floating type numpy.ndarray.')
+            raise TypeError('It has to be floating type numpy.ndarray.')
 
         try:
             assert self.nbdims == ranges.shape[0]
