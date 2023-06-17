@@ -1,6 +1,5 @@
 
 from abc import ABC, abstractmethod
-from enum import Enum
 from typing import List
 
 import numpy as np
@@ -10,8 +9,10 @@ class State(ABC):
     pass
 
 
-class DiscreteState(ABC, State, Enum):
-    pass
+class DiscreteState(State):
+    @abstractmethod
+    def get_all_possible_state_values(self) -> List:
+        raise NotImplementedError()
 
 
 class InvalidRangeError(Exception):
@@ -20,12 +21,14 @@ class InvalidRangeError(Exception):
         super().__init__(self.message)
 
 
-class ContinuousState(ABC, State):
+class ContinuousState(State):
     def __init__(self, nbdims: int, ranges: List[np.array]):
         self.nbdims = nbdims
 
         try:
             assert (ranges.dtype == np.float64) or (ranges.dtype == np.float32) or (ranges.dtype == np.float16)
+        except AssertionError:
+            raise ValueError('It has to be floating type numpy.ndarray.')
 
         try:
             assert self.nbdims == ranges.shape[0]
@@ -40,12 +43,5 @@ class ContinuousState(ABC, State):
 
         self.ranges = ranges
 
-
-class StateSpace(ABC):
-    @abstractmethod
-    def get_state(self, key) -> State:
-        pass
-
-
-class DiscreteStateSpace(ABC, StateSpace):
-    pass
+    def get_state_value_ranges(self):
+        return self.ranges
