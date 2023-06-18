@@ -1,0 +1,63 @@
+version: 2
+
+shared: &shared
+  working_directory: ~/pyrlutils
+
+  steps:
+    - checkout
+
+    - run:
+        name: Apt Install
+        command: |
+          sudo apt-get update
+          sudo apt-get install -y libc6
+          sudo apt-get install -y g++
+
+    - run:
+        name: Installing Packages
+        command: |
+          pip install --upgrade --user pip
+          pip install --upgrade --user .
+
+    - run:
+        name: Run Unit Tests
+        command: |
+          python setup.py test
+
+
+
+jobs:
+  py37:
+    <<: *shared
+    docker:
+      - image: cimg/python:3.7
+
+  py38:
+    <<: *shared
+    docker:
+      - image: cimg/python:3.8
+
+  py39:
+    <<: *shared
+    docker:
+      - image: cimg/python:3.9
+
+  py310:
+    <<: *shared
+    docker:
+      - image: cimg/python:3.10
+
+  py311:
+    <<: *shared
+    docker:
+      - image: cimg/python:3.11
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - py37
+      - py38
+      - py39
+      - py310
+      - py311
