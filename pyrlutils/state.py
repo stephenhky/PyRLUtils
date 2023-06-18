@@ -29,7 +29,7 @@ class DiscreteState(State):
             raise ValueError('State value {} is invalid.'.format(state_value))
 
     def get_all_possible_state_values(self) -> List:
-        return self.all_state_values
+        return self._all_state_values
 
 
 class InvalidRangeError(Exception):
