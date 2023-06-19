@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import numpy as np
 
@@ -45,7 +45,7 @@ class InvalidRangeError(Exception):
 
 
 class ContinuousState(State):
-    def __init__(self, nbdims: int, ranges: List[np.array], init_value: Optional[float, np.ndarray] = None):
+    def __init__(self, nbdims: int, ranges: List[np.array], init_value: Optional[Union[float, np.ndarray]] = None):
         self._nbdims = nbdims
 
         try:
