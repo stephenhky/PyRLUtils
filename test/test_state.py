@@ -27,7 +27,7 @@ class TestState(unittest.TestCase):
         assert state.ranges[0, 0] == 0.0
         assert state.ranges[0, 1] == 1.0
 
-        self.assertRaises(InvalidRangeError, ContinuousState(np.array([0.0, 1.0]), 1.2))
+        self.assertRaises(InvalidRangeError, ContinuousState(1, np.array([0.0, 1.0]), 1.2))
 
 
 

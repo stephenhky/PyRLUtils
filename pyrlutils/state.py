@@ -45,7 +45,7 @@ class InvalidRangeError(Exception):
 
 
 class ContinuousState(State):
-    def __init__(self, nbdims: int, ranges: List[np.array], init_value: np.ndarray = None):
+    def __init__(self, nbdims: int, ranges: List[np.array], init_value: Optional[float, np.ndarray] = None):
         self._nbdims = nbdims
 
         try:
