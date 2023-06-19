@@ -1,7 +1,9 @@
 
 import unittest
 
-from pyrlutils.state import DiscreteState
+import numpy as np
+
+from pyrlutils.state import DiscreteState, ContinuousState, InvalidRangeError
 
 
 class TestState(unittest.TestCase):
@@ -18,6 +20,15 @@ class TestState(unittest.TestCase):
         assert state.get_state_value() == state.state_value
 
         self.assertRaises(ValueError, state.set_state_value, 'e')
+
+    def test_1d_continuous_state(self):
+        state = ContinuousState(1, np.array([0.0, 1.0]))
+        assert state.get_state_value() == state.state_value
+        assert state.ranges[0, 0] == 0.0
+        assert state.ranges[0, 1] == 1.0
+
+        self.assertRaises(InvalidRangeError, ContinuousState(np.array([0.0, 1.0]), 1.2))
+
 
 
 if __name__ == '__main__':
