@@ -54,17 +54,29 @@ class ContinuousState(State):
             raise TypeError('It has to be floating type numpy.ndarray.')
 
         try:
-            assert self._nbdims == ranges.shape[0]
+            assert self._nbdims > 0
         except AssertionError:
-            raise ValueError('Number of ranges does not meet the number of dimensions.')
+            raise ValueError('Number of dimensions must be positive.')
 
-        try:
-            for i in range(ranges.shape[0]):
-                assert ranges[i, 0] <= ranges[i, 1]
-        except AssertionError:
-            raise InvalidRangeError()
+        if self._nbdims > 1:
+            try:
+                assert self._nbdims == ranges.shape[0]
+            except AssertionError:
+                raise ValueError('Number of ranges does not meet the number of dimensions.')
 
-        self._ranges = ranges
+        if self._nbdims > 1:
+            try:
+                for i in range(ranges.shape[0]):
+                    assert ranges[i, 0] <= ranges[i, 1]
+            except AssertionError:
+                raise InvalidRangeError()
+        else:
+            try:
+                assert ranges[0] <= ranges[1]
+            except AssertionError:
+                raise InvalidRangeError()
+
+        self._ranges = ranges if self._nbdims > 1 else np.expand_dims(ranges, axis=0)
         if init_value is None:
             self._state_value = np.zeros(self._nbdims)
             for i in range(self._nbdims):
