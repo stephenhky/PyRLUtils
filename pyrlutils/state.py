@@ -6,7 +6,12 @@ import numpy as np
 
 
 class State(ABC):
+    @property
+    def state_value(self):
+        return self.get_state_value()
+
     @abstractmethod
+    @state_value.setter
     def set_state_value(self, state_value):
         pass
 
@@ -23,10 +28,6 @@ class DiscreteState(State):
 
     def get_state_value(self):
         return self._state_value
-
-    @property
-    def state_value(self):
-        return self.get_state_value()
 
     def set_state_value(self, state_value):
         if state_value in self._all_state_values:
