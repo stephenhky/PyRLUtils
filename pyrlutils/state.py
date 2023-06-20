@@ -11,7 +11,6 @@ class State(ABC):
         return self.get_state_value()
 
     @abstractmethod
-    @state_value.setter
     def set_state_value(self, state_value):
         pass
 
