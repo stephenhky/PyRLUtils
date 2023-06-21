@@ -1,13 +1,14 @@
 
-from abc import ABC, abstractmethod
-
 from .state import State
 
 
-class Action(ABC):
-    @abstractmethod
+class Action:
+    def __init__(self, actionfunc):
+        self._actionfunc = actionfunc
+
     def act(self, state: State) -> State:
-        pass
+        self._actionfunc(state)
+        return state
 
     def __call__(self, state: State) -> State:
         return self.act(state)
