@@ -13,12 +13,22 @@ class Policy(ABC):
     def __call__(self, state: State) -> Action:
         return self.get_action(state)
 
+    @property
+    def is_stochastic(self) -> bool:
+        pass
+
 
 class DeterministicPolicy(Policy):
-    pass
+    @property
+    def is_stochastic(self) -> bool:
+        return False
 
 
 class StochasticPolicy(Policy):
     @abstractmethod
     def get_probability(self, state: State, action: Action) -> float:
         pass
+
+    @property
+    def is_stochastic(self) -> bool:
+        return True
