@@ -1,4 +1,8 @@
 
+from types import LambdaType
+
+import numpy as np
+
 from .state import DiscreteState
 
 
@@ -31,7 +35,7 @@ class TransitionProbabilityFactory:
         self.transprobs = {}
         self.all_state_values = []
         self.all_action_values = []
-        self.all_actions_dict = {}
+        self.objects_generated = False
 
     def add_state_transitions(self, state_value, action_values_to_next_state: dict):
         if state_value not in self.all_state_values:
@@ -60,7 +64,9 @@ class TransitionProbabilityFactory:
 
         self.transprobs[state_value] = this_state_transition_dict
 
-
     def generate_mdp_objects(self):
         state = DiscreteState(self.all_state_values)
+        actions_dict = {}
+        for action_value in self.all_action_values:
+            pass
 
