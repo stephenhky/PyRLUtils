@@ -1,0 +1,39 @@
+
+import unittest
+
+from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
+
+class TestState(unittest.TestCase):
+    def test_slippery_walk(self):
+        # refer to DRL pp. 41
+        trans_probs_factory = TransitionProbabilityFactory()
+        trans_probs_factory.add_state_transitions(
+            0,
+            {
+                'left': [NextStateTuple(0, 1.0, 0.0, True)],
+                'right': [NextStateTuple(0, 1.0, 0.0, True)]
+            }
+        )
+        trans_probs_factory.add_state_transitions(
+            1,
+            {
+                'left': [NextStateTuple(0, 0.8, 0.0, True), NextStateTuple(2, 0.2, 1.0, True)],
+                'right': [NextStateTuple(2, 0.8, 1.0, True), NextStateTuple(0, 0.2, 0.0, True)]
+            }
+        )
+        trans_probs_factory.add_state_transitions(
+            2,
+            {
+                'left': [NextStateTuple(2, 1.0, 1.0, True)],
+                'right': [NextStateTuple(2, 1.0, 1.0, True)]
+            }
+        )
+
+        state, actions = trans_probs_factory.generate_mdp_objects()
+
+        assert len(state.get_all_possible_state_values()) == 3
+        assert len(actions) == 3
+
+
+if __name__ == '__main__':
+    unittest.main()
