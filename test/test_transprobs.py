@@ -62,8 +62,8 @@ class TestState(unittest.TestCase):
         assert ind_reward_fcn(1, 'left', 2) == 1.0
         assert ind_reward_fcn(1, 'right', 0) == 0.0
         assert ind_reward_fcn(1, 'right', 2) == 1.0
-        assert ind_reward_fcn(2, 'left', 2) == 0.0
-        assert ind_reward_fcn(2, 'right', 2) == 0.0
+        assert ind_reward_fcn(2, 'left', 2) == 1.0
+        assert ind_reward_fcn(2, 'right', 2) == 1.0
 
 
 if __name__ == '__main__':
