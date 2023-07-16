@@ -96,7 +96,7 @@ class TransitionProbabilityFactory:
                     for next_tuple in self.transprobs[state_value][action_value]:
                         if next_tuple.next_state_value == next_state_value:
                             return next_tuple.reward
-                        return 0.0
+                    return 0.0
                 else:
                     return 0.0
             else:
