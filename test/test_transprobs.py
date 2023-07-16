@@ -32,7 +32,25 @@ class TestState(unittest.TestCase):
         state, actions = trans_probs_factory.generate_mdp_objects()
 
         assert len(state.get_all_possible_state_values()) == 3
-        assert len(actions) == 3
+        assert len(actions) == 2
+
+        state = actions['left'](state)
+        assert state.state_value == 0
+        state = actions['right'](state)
+        assert state.state_value == 0
+
+        state.set_state_value(2)
+        state = actions['left'](state)
+        assert state.state_value == 2
+        state = actions['right'](state)
+        assert state.state_value == 2
+
+        state.set_state_value(1)
+        state = actions['left'](state)
+        assert state.state_value != 1
+        state.set_state_value(1)
+        state = actions['right'](state)
+        assert state.state_value != 1
 
 
 if __name__ == '__main__':

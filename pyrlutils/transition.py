@@ -80,7 +80,9 @@ class TransitionProbabilityFactory:
             nexttuples = state_nexttuples[state.state_value]
             nextstates = [nexttuple.next_state_value for nexttuple in nexttuples]
             probs = [nexttuple.probability for nexttuple in nexttuples]
-            return np.random.choice(nextstates, p=probs)
+            next_state_value = np.random.choice(nextstates, p=probs)
+            state.set_state_value(next_state_value)
+            return state
 
         return _action_function
 
