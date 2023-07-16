@@ -1,5 +1,6 @@
 
 from types import LambdaType
+from typing import Tuple
 
 import numpy as np
 
@@ -87,7 +88,7 @@ class TransitionProbabilityFactory:
         return _action_function
 
 
-    def generate_mdp_objects(self) -> tuple[DiscreteState, dict]:
+    def generate_mdp_objects(self) -> Tuple[DiscreteState, dict]:
         state = DiscreteState(self.all_state_values)
         actions_dict = {}
         for action_value in self.all_action_values:
