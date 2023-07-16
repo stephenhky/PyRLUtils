@@ -29,7 +29,7 @@ class TestState(unittest.TestCase):
             }
         )
 
-        state, actions = trans_probs_factory.generate_mdp_objects()
+        state, actions, ind_reward_fcn = trans_probs_factory.generate_mdp_objects()
 
         assert len(state.get_all_possible_state_values()) == 3
         assert len(actions) == 2
@@ -51,6 +51,19 @@ class TestState(unittest.TestCase):
         state.set_state_value(1)
         state = actions['right'](state)
         assert state.state_value != 1
+
+        assert ind_reward_fcn(0, 'left', 0) == 0.0
+        assert ind_reward_fcn(0, 'right', 0) == 0.0
+        assert ind_reward_fcn(0, 'left', 1) == 0.0
+        assert ind_reward_fcn(0, 'right', 1) == 0.0
+        assert ind_reward_fcn(0, 'left', 2) == 0.0
+        assert ind_reward_fcn(0, 'right', 2) == 0.0
+        assert ind_reward_fcn(1, 'left', 0) == 0.0
+        assert ind_reward_fcn(1, 'left', 2) == 1.0
+        assert ind_reward_fcn(1, 'right', 0) == 0.0
+        assert ind_reward_fcn(1, 'right', 2) == 1.0
+        assert ind_reward_fcn(2, 'left', 2) == 0.0
+        assert ind_reward_fcn(2, 'right', 2) == 0.0
 
 
 if __name__ == '__main__':

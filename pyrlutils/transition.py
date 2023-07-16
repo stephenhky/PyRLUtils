@@ -5,6 +5,7 @@ from typing import Tuple
 import numpy as np
 
 from .state import DiscreteState
+from .values import IndividualRewardFunction
 
 
 class NextStateTuple:
@@ -87,13 +88,37 @@ class TransitionProbabilityFactory:
 
         return _action_function
 
+    def _generate_individual_reward_function(self) -> IndividualRewardFunction:
 
-    def generate_mdp_objects(self) -> Tuple[DiscreteState, dict]:
+        def _individual_reward_function(state_value, action_value, next_state_value) -> float:
+            if state_value in self.transprobs.keys():
+                if action_value in self.transprobs[state_value].keys():
+                    for next_tuple in self.transprobs[state_value][action_value]:
+                        if next_tuple.next_state_value == next_state_value:
+                            return next_tuple.reward
+                        return 0.0
+                else:
+                    return 0.0
+            else:
+                return 0.0
+
+        class ThisIndividualRewardFunction(IndividualRewardFunction):
+            def __init__(self):
+                super().__init__()
+
+            def reward(self, state_value, action_value, next_state_value) -> float:
+                return _individual_reward_function(state_value, action_value, next_state_value)
+
+        return ThisIndividualRewardFunction()
+
+    def generate_mdp_objects(self) -> Tuple[DiscreteState, dict, IndividualRewardFunction]:
         state = DiscreteState(self.all_state_values)
         actions_dict = {}
         for action_value in self.all_action_values:
             state_nexttuple = self._get_probs_for_eachstate(action_value)
             actions_dict[action_value] = self._generate_action_function(state_nexttuple)
 
-        return state, actions_dict
+        individual_reward_fcn = self._generate_individual_reward_function()
+
+        return state, actions_dict, individual_reward_fcn
 

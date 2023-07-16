@@ -1,16 +1,11 @@
 
 from abc import ABC, abstractmethod
 
-from .state import State
-from .action import Action
 
-
-class RewardFunction(ABC):
+class IndividualRewardFunction(ABC):
     @abstractmethod
-    def reward(self, old_state: State, action: Action, new_state: State) -> float:
+    def reward(self, state_value, action_value, next_state_value) -> float:
         pass
 
-    def __call__(self, old_state: State, action: Action, new_state: State) -> float:
-        return self.reward(old_state, action, new_state)
-
-    
+    def __call__(self, state_value, action_value, next_state_value) -> float:
+        return self.reward(state_value, action_value, next_state_value)
