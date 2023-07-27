@@ -1,9 +1,6 @@
 
 from abc import ABC, abstractmethod
 
-from .state import State
-from .action import Action
-
 
 class IndividualRewardFunction(ABC):
     @abstractmethod
@@ -31,5 +28,8 @@ class RewardFunction(ABC):
         return self._individual_reward_function(state_value, action_value, next_state_value)
 
     @abstractmethod
-    def total_reward(self, state: State, action: Action):
+    def total_reward(self, state_value, action_value) -> float:
         pass
+
+    def __call__(self, state_value, action_value) -> float:
+        return self.total_reward(state_value, action_value)
