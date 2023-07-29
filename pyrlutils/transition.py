@@ -6,6 +6,7 @@ import numpy as np
 
 from .state import DiscreteState
 from .values import IndividualRewardFunction
+from .action import Action
 
 
 class NextStateTuple:
@@ -116,7 +117,7 @@ class TransitionProbabilityFactory:
         actions_dict = {}
         for action_value in self.all_action_values:
             state_nexttuple = self._get_probs_for_eachstate(action_value)
-            actions_dict[action_value] = self._generate_action_function(state_nexttuple)
+            actions_dict[action_value] = Action(self._generate_action_function(state_nexttuple))
 
         individual_reward_fcn = self._generate_individual_reward_function()
 
