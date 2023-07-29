@@ -18,6 +18,10 @@ class State(ABC):
     def get_state_value(self):
         pass
 
+    @state_value.setter
+    def state_value(self, new_state_value):
+        self.set_state_value(new_state_value)
+
 
 class DiscreteState(State):
     def __init__(self, all_state_values: List, initial_values: Optional[List] = None):
