@@ -112,11 +112,23 @@ class ContinuousState(State):
                     raise InvalidRangeError('Initialized value is out of range.')
             self._state_value = init_value
 
-    def set_state_value(self, state_value: np.ndarray):
-        try:
-            assert state_value.shape[0] == self._nbdims
-        except AssertionError:
-            raise ValueError('Given value does not have the right dimension.')
+    def set_state_value(self, state_value: Union[float, np.ndarray]):
+        if self.nbdims > 1:
+            try:
+                assert state_value.shape[0] == self._nbdims
+            except AssertionError:
+                raise ValueError('Given value does not have the right dimension.')
+            for i in range(self.nbdims):
+                try:
+                    assert state_value >= self.ranges[i, 0] and state_value <= self.ranges[i, 1]
+                except AssertionError:
+                    raise InvalidRangeError()
+        else:
+            try:
+                assert state_value >= self.ranges[0, 0] and state_value <= self.ranges[0, 1]
+            except AssertionError:
+                raise InvalidRangeError()
+
         self._state_value = state_value
 
     def get_state_value(self) -> np.ndarray:
@@ -133,7 +145,7 @@ class ContinuousState(State):
         return self.get_state_value_ranges()
 
     @property
-    def state_value(self) -> np.ndarray:
+    def state_value(self) -> Union[float, np.ndarray]:
         return self.get_state_value()
 
     @property
