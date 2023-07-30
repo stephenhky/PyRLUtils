@@ -49,7 +49,7 @@ class InvalidRangeError(Exception):
 
 
 class ContinuousState(State):
-    def __init__(self, nbdims: int, ranges: List[np.array], init_value: Optional[Union[float, np.ndarray]] = None):
+    def __init__(self, nbdims: int, ranges: np.array, init_value: Optional[Union[float, np.ndarray]] = None):
         self._nbdims = nbdims
 
         try:
@@ -67,6 +67,15 @@ class ContinuousState(State):
                 assert self._nbdims == ranges.shape[0]
             except AssertionError:
                 raise ValueError('Number of ranges does not meet the number of dimensions.')
+            try:
+                assert ranges.shape[1] == 2
+            except AssertionError:
+                raise ValueError("Only the smallest and largest values in `ranges'.")
+        else:
+            try:
+                assert ranges.shape[0] == 2
+            except AssertionError:
+                raise ValueError("Only the smallest and largest values in `ranges'.")
 
         if self._nbdims > 1:
             try:
