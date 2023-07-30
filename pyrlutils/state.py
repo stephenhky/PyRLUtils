@@ -41,6 +41,14 @@ class DiscreteState(State):
     def get_all_possible_state_values(self) -> List:
         return self._all_state_values
 
+    @property
+    def state_value(self):
+        return self._state_value
+
+    @state_value.setter
+    def state_value(self, new_state_value):
+        self.set_state_value(new_state_value)
+
 
 class InvalidRangeError(Exception):
     def __init__(self, message=None):
@@ -147,6 +155,10 @@ class ContinuousState(State):
     @property
     def state_value(self) -> Union[float, np.ndarray]:
         return self.get_state_value()
+
+    @state_value.setter
+    def state_value(self, new_state_value):
+        self.set_state_value(new_state_value)
 
     @property
     def nbdims(self) -> int:
