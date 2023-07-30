@@ -33,6 +33,25 @@ class TestContinuousSystem(unittest.TestCase):
         state.state_value = 0.0
         assert round(state.state_value, 1) == 0.0
 
+    def test_2d(self):
+        state = ContinuousState(2, np.array([[-1.5, 1.5], [-2.5, 2.5]]), init_value=np.zeros(2))
+        actions = {
+            'left': lambda s, v: s.set_state_value(
+                s.state_value+np.array([-v, 0]) if s.state_value[0] > -1.5+v else np.array([-1.5, s.state_value[1]])
+            ),
+            'right': lambda s, v: s.set_state_value(
+                s.state_value+np.array([v, 0]) if s.state_value[0] < 1.5-v else np.array([1.5, s.state_value[1]])
+            ),
+            'up': lambda s, v: s.set_state_value(
+                s.state_value+np.array([0, v]) if s.state_value[1] < 2.5-v else np.array([s.state_value[0], 2.5])
+            ),
+            'down': lambda s, v: s.set_state_value(
+                s.state_value+np.array([0, -v]) if s.state_value[1] > -2.5+v else np.array([s.state_value[0], -2.5])
+            )
+        }
+
+        np.testing.assert_array_almost_equal(state.state_value, np.array([0., 0.]))
+
 
 if __name__ == '__main__':
     unittest.main()
