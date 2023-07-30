@@ -10,8 +10,8 @@ class TestContinuousSystem(unittest.TestCase):
     def test_1d(self):
         state = ContinuousState(1, np.array([-1.5, 1.5]), init_value=0.0)
         actions = {
-            'increase': lambda s, v: s.set_state_value(s.state_value+v) if s.state_value < 1.5-v else 1.5,
-            'decrease': lambda s, v: s.set_state_value(s.state_value-v) if s.state_value > -1.5+v else -1.5
+            'increase': lambda s, v: s.set_state_value(s.state_value+v if s.state_value < 1.5-v else 1.5),
+            'decrease': lambda s, v: s.set_state_value(s.state_value-v if s.state_value > -1.5+v else -1.5)
         }
 
         assert state.state_value == 0.0
