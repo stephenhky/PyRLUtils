@@ -51,6 +51,16 @@ class TestContinuousSystem(unittest.TestCase):
         }
 
         np.testing.assert_array_almost_equal(state.state_value, np.array([0., 0.]))
+        actions['left'](state, 0.3)
+        np.testing.assert_array_almost_equal(state.state_value, np.array([-0.3, 0.0]))
+        actions['right'](state, 2.5)
+        np.testing.assert_array_almost_equal(state.state_value, np.array([1.5, 0.0]))
+        actions['left'](state, 2.0)
+        np.testing.assert_array_almost_equal(state.state_value, np.array([-0.5, 0.0]))
+        actions['up'](state, 1.0)
+        np.testing.assert_array_almost_equal(state.state_value, np.array([1.5, 1.0]))
+        actions['down'](state, 0.7)
+        np.testing.assert_array_almost_equal(state.state_value, np.array([1.5, 0.3]))
 
 
 if __name__ == '__main__':
