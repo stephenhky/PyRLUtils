@@ -128,7 +128,7 @@ class ContinuousState(State):
                 raise ValueError('Given value does not have the right dimension.')
             for i in range(self.nbdims):
                 try:
-                    assert state_value >= self.ranges[i, 0] and state_value <= self.ranges[i, 1]
+                    assert state_value[i] >= self.ranges[i, 0] and state_value[i] <= self.ranges[i, 1]
                 except AssertionError:
                     raise InvalidRangeError()
         else:
