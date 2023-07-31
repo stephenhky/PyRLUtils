@@ -23,30 +23,33 @@ class State(ABC):
         self.set_state_value(new_state_value)
 
 
+DiscreteStateValueType = Union[float, str]
+
+
 class DiscreteState(State):
-    def __init__(self, all_state_values: List, initial_values: Optional[List] = None):
+    def __init__(self, all_state_values: List[DiscreteStateValueType], initial_values: Optional[List[DiscreteStateValueType]] = None):
         super().__init__()
         self._all_state_values = all_state_values
         self._state_value = initial_values if initial_values is not None and initial_values in self._all_state_values else self._all_state_values[0]
 
-    def get_state_value(self):
+    def get_state_value(self) -> DiscreteStateValueType:
         return self._state_value
 
-    def set_state_value(self, state_value):
+    def set_state_value(self, state_value: DiscreteStateValueType):
         if state_value in self._all_state_values:
             self._state_value = state_value
         else:
             raise ValueError('State value {} is invalid.'.format(state_value))
 
-    def get_all_possible_state_values(self) -> List:
+    def get_all_possible_state_values(self) -> List[DiscreteStateValueType]:
         return self._all_state_values
 
     @property
-    def state_value(self):
+    def state_value(self) -> DiscreteStateValueType:
         return self._state_value
 
     @state_value.setter
-    def state_value(self, new_state_value):
+    def state_value(self, new_state_value: DiscreteStateValueType):
         self.set_state_value(new_state_value)
 
 

@@ -1,23 +1,23 @@
 
 from types import LambdaType
-from typing import Tuple
+from typing import Tuple, Dict
 
 import numpy as np
 
-from .state import DiscreteState
+from .state import DiscreteState, DiscreteStateValueType
 from .values import IndividualRewardFunction
-from .action import Action
+from .action import Action, DiscreteActionValueType
 
 
 class NextStateTuple:
-    def __init__(self, next_state_value, probability: float, reward: float, terminal: bool):
+    def __init__(self, next_state_value: DiscreteStateValueType, probability: float, reward: float, terminal: bool):
         self._next_state_value = next_state_value
         self._probability = probability
         self._reward = reward
         self._terminal = terminal
 
     @property
-    def next_state_value(self):
+    def next_state_value(self) -> DiscreteStateValueType:
         return self._next_state_value
 
     @property
@@ -40,7 +40,7 @@ class TransitionProbabilityFactory:
         self.all_action_values = []
         self.objects_generated = False
 
-    def add_state_transitions(self, state_value, action_values_to_next_state: dict):
+    def add_state_transitions(self, state_value: DiscreteStateValueType, action_values_to_next_state: dict):
         if state_value not in self.all_state_values:
             self.all_state_values.append(state_value)
 
@@ -69,7 +69,7 @@ class TransitionProbabilityFactory:
 
         self.transprobs[state_value] = this_state_transition_dict
 
-    def _get_probs_for_eachstate(self, action_value):
+    def _get_probs_for_eachstate(self, action_value: DiscreteActionValueType) -> Dict[DiscreteStateValueType, NextStateTuple]:
         state_nexttuples = {}
         for state_value, action_nexttuples_pair in self.transprobs.items():
             for this_action_value, nexttuples in action_nexttuples_pair.items():
@@ -79,7 +79,7 @@ class TransitionProbabilityFactory:
 
     def _generate_action_function(self, state_nexttuples: dict) -> LambdaType:
 
-        def _action_function(state: DiscreteState):
+        def _action_function(state: DiscreteState) -> DiscreteState:
             nexttuples = state_nexttuples[state.state_value]
             nextstates = [nexttuple.next_state_value for nexttuple in nexttuples]
             probs = [nexttuple.probability for nexttuple in nexttuples]

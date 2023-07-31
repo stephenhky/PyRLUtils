@@ -1,8 +1,11 @@
 
 from types import LambdaType
+from typing import Union
 
 from .state import State
 
+
+DiscreteActionValueType = Union[float, str]
 
 class Action:
     def __init__(self, actionfunc: LambdaType):
