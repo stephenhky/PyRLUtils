@@ -44,7 +44,7 @@ setup(
     ],
     install_requires=install_requirements(),
     tests_require=[
-      'unittest', 'gym'
+      'unittest'
     ],
     # scripts=[],
     include_package_data=True,
