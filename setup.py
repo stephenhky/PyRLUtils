@@ -38,13 +38,13 @@ setup(
     url="https://github.com/stephenhky/PyRLUtils",
     author="Kwan-Yuet Ho",
     author_email="stephenhky@yahoo.com.hk",
-    license='LGPL',
+    license='MIT',
     packages=[
         'pyrlutils'
     ],
     install_requires=install_requirements(),
     tests_require=[
-      'unittest'
+      'unittest', 'gym'
     ],
     # scripts=[],
     include_package_data=True,
