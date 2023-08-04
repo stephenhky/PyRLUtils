@@ -6,36 +6,51 @@ import numpy as np
 
 
 class State(ABC):
-    @abstractmethod
-    def set_state_value(self, state_value):
-        pass
-
-    @abstractmethod
-    def get_state_value(self):
-        pass
-
-
-class DiscreteState(State):
-    def __init__(self, all_state_values: List, initial_values: Optional[List] = None):
-        super().__init__()
-        self._all_state_values = all_state_values
-        self._state_value = initial_values if initial_values is not None and initial_values in self._all_state_values else self._all_state_values[0]
-
-    def get_state_value(self):
-        return self._state_value
-
     @property
     def state_value(self):
         return self.get_state_value()
 
+    @abstractmethod
     def set_state_value(self, state_value):
+        pass
+
+    @abstractmethod
+    def get_state_value(self):
+        pass
+
+    @state_value.setter
+    def state_value(self, new_state_value):
+        self.set_state_value(new_state_value)
+
+
+DiscreteStateValueType = Union[float, str]
+
+
+class DiscreteState(State):
+    def __init__(self, all_state_values: List[DiscreteStateValueType], initial_values: Optional[List[DiscreteStateValueType]] = None):
+        super().__init__()
+        self._all_state_values = all_state_values
+        self._state_value = initial_values if initial_values is not None and initial_values in self._all_state_values else self._all_state_values[0]
+
+    def get_state_value(self) -> DiscreteStateValueType:
+        return self._state_value
+
+    def set_state_value(self, state_value: DiscreteStateValueType):
         if state_value in self._all_state_values:
             self._state_value = state_value
         else:
             raise ValueError('State value {} is invalid.'.format(state_value))
 
-    def get_all_possible_state_values(self) -> List:
+    def get_all_possible_state_values(self) -> List[DiscreteStateValueType]:
         return self._all_state_values
+
+    @property
+    def state_value(self) -> DiscreteStateValueType:
+        return self._state_value
+
+    @state_value.setter
+    def state_value(self, new_state_value: DiscreteStateValueType):
+        self.set_state_value(new_state_value)
 
 
 class InvalidRangeError(Exception):
@@ -45,7 +60,7 @@ class InvalidRangeError(Exception):
 
 
 class ContinuousState(State):
-    def __init__(self, nbdims: int, ranges: List[np.array], init_value: Optional[Union[float, np.ndarray]] = None):
+    def __init__(self, nbdims: int, ranges: np.array, init_value: Optional[Union[float, np.ndarray]] = None):
         self._nbdims = nbdims
 
         try:
@@ -63,6 +78,15 @@ class ContinuousState(State):
                 assert self._nbdims == ranges.shape[0]
             except AssertionError:
                 raise ValueError('Number of ranges does not meet the number of dimensions.')
+            try:
+                assert ranges.shape[1] == 2
+            except AssertionError:
+                raise ValueError("Only the smallest and largest values in `ranges'.")
+        else:
+            try:
+                assert ranges.shape[0] == 2
+            except AssertionError:
+                raise ValueError("Only the smallest and largest values in `ranges'.")
 
         if self._nbdims > 1:
             try:
@@ -99,11 +123,23 @@ class ContinuousState(State):
                     raise InvalidRangeError('Initialized value is out of range.')
             self._state_value = init_value
 
-    def set_state_value(self, state_value: np.ndarray):
-        try:
-            assert state_value.shape[0] == self._nbdims
-        except AssertionError:
-            raise ValueError('Given value does not have the right dimension.')
+    def set_state_value(self, state_value: Union[float, np.ndarray]):
+        if self.nbdims > 1:
+            try:
+                assert state_value.shape[0] == self._nbdims
+            except AssertionError:
+                raise ValueError('Given value does not have the right dimension.')
+            for i in range(self.nbdims):
+                try:
+                    assert state_value[i] >= self.ranges[i, 0] and state_value[i] <= self.ranges[i, 1]
+                except AssertionError:
+                    raise InvalidRangeError()
+        else:
+            try:
+                assert state_value >= self.ranges[0, 0] and state_value <= self.ranges[0, 1]
+            except AssertionError:
+                raise InvalidRangeError()
+
         self._state_value = state_value
 
     def get_state_value(self) -> np.ndarray:
@@ -120,8 +156,12 @@ class ContinuousState(State):
         return self.get_state_value_ranges()
 
     @property
-    def state_value(self) -> np.ndarray:
+    def state_value(self) -> Union[float, np.ndarray]:
         return self.get_state_value()
+
+    @state_value.setter
+    def state_value(self, new_state_value):
+        self.set_state_value(new_state_value)
 
     @property
     def nbdims(self) -> int:
