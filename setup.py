@@ -38,7 +38,7 @@ setup(
     url="https://github.com/stephenhky/PyRLUtils",
     author="Kwan-Yuet Ho",
     author_email="stephenhky@yahoo.com.hk",
-    license='LGPL',
+    license='MIT',
     packages=[
         'pyrlutils'
     ],
