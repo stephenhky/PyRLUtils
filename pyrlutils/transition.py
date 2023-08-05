@@ -145,7 +145,7 @@ def convert_openai_gymenv_to_transprob(envname):
 
 class OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory(TransitionProbabilityFactory):
     def __init__(self, envname):
-        super(OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory).__init__()
+        super().__init__()
         self.gymenv = gym.make(envname)
         self._convert_openai_gymenv_to_transprob()
 
