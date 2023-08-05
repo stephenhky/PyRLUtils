@@ -1,8 +1,11 @@
 
 from abc import ABC, abstractmethod
+from typing import Union
+
+import numpy as np
 
 from .state import State
-from .action import Action
+from .action import Action, DiscreteActionValueType
 
 
 class Policy(ABC):
@@ -26,9 +29,21 @@ class DeterministicPolicy(Policy):
 
 class StochasticPolicy(Policy):
     @abstractmethod
-    def get_probability(self, state: State, action: Action) -> float:
+    def get_probability(self, state: State, action_value, *args, **kwargs) -> float:
         pass
 
     @property
     def is_stochastic(self) -> bool:
         return True
+
+
+class DiscreteStochasticPolicy(StochasticPolicy):
+    @abstractmethod
+    def get_probability(self, state: State, action_value: DiscreteActionValueType) -> float:
+        pass
+
+
+class ContinuousStochasticPolicy(StochasticPolicy):
+    @abstractmethod
+    def get_probability(self, state: State, action_value: DiscreteActionValueType, value: Union[float, np.ndarray]) -> float:
+        pass
