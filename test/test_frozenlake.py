@@ -18,6 +18,9 @@ class TestFrozenLake(unittest.TestCase):
         actions_dict[2](state)
         assert state.state_value == 15
 
+        assert ind_reward_fcn(0, 0, 0) == 0.0
+        assert ind_reward_fcn(14, 3, 15) == 1.0
+
 
 if __name__ == '__main__':
     unittest.main()
