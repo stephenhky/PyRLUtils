@@ -93,16 +93,17 @@ class TransitionProbabilityFactory:
     def _generate_individual_reward_function(self) -> IndividualRewardFunction:
 
         def _individual_reward_function(state_value, action_value, next_state_value) -> float:
-            if state_value in self._transprobs.keys():
-                if action_value in self._transprobs[state_value].keys():
-                    for next_tuple in self._transprobs[state_value][action_value]:
-                        if next_tuple.next_state_value == next_state_value:
-                            return next_tuple.reward
-                    return 0.0
-                else:
-                    return 0.0
-            else:
-                return 0.0
+            if state_value not in self._transprobs.keys():
+                return 0.
+
+            if action_value not in self._transprobs[state_value].keys():
+                return 0.
+
+            reward = 0.
+            for next_tuple in self._transprobs[state_value][action_value]:
+                if next_tuple.next_state_value == next_state_value:
+                    reward += next_tuple.reward
+            return reward
 
         class ThisIndividualRewardFunction(IndividualRewardFunction):
             def __init__(self):
@@ -117,11 +118,11 @@ class TransitionProbabilityFactory:
         if state_value not in self._transprobs.keys():
             return 0.
 
-        if action_value not in self._transprobs['state_value']:
+        if action_value not in self._transprobs[state_value]:
             return 0.
 
         probs = 0.
-        for next_state_tuple in self._transprobs['state_value']['action_value']:
+        for next_state_tuple in self._transprobs[state_value][action_value]:
             if next_state_tuple.next_state_value == new_state_value:
                 probs += next_state_tuple.probability
         return probs
