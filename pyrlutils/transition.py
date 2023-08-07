@@ -6,7 +6,7 @@ import numpy as np
 import gym
 
 from .state import DiscreteState, DiscreteStateValueType
-from .values import IndividualRewardFunction
+from .reward import IndividualRewardFunction
 from .action import Action, DiscreteActionValueType
 
 
