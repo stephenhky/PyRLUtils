@@ -21,6 +21,9 @@ class TestFrozenLake(unittest.TestCase):
         assert ind_reward_fcn(0, 0, 0) == 0.0
         assert ind_reward_fcn(14, 3, 15) == 1.0
 
+        assert abs(tranprobfactory.get_probability(0, 0, 0) - 0.66667) < 1e-4
+        assert abs(tranprobfactory.get_probability(14, 3, 15) - 0.33333) < 1e-4
+
 
 if __name__ == '__main__':
     unittest.main()
