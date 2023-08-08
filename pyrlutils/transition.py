@@ -131,7 +131,7 @@ class TransitionProbabilityFactory:
     def transition_probabilities(self) -> dict:
         return self._transprobs
 
-    def generate_mdp_objects(self) -> Tuple[DiscreteState, dict, IndividualRewardFunction]:
+    def generate_mdp_objects(self) -> Tuple[DiscreteState, Dict[DiscreteActionValueType, Action], IndividualRewardFunction]:
         state = DiscreteState(self._all_state_values)
         actions_dict = {}
         for action_value in self._all_action_values:
@@ -142,9 +142,9 @@ class TransitionProbabilityFactory:
 
         return state, actions_dict, individual_reward_fcn
 
-        @property
-        def objects_generated(self) -> bool:
-            return self._objects_generated
+    @property
+    def objects_generated(self) -> bool:
+        return self._objects_generated
 
 
 class OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory(TransitionProbabilityFactory):
