@@ -1,5 +1,7 @@
 
-from typing import Dict
+import random
+from copy import copy
+from typing import Tuple
 
 import numpy as np
 
@@ -74,4 +76,19 @@ class OptimalPolicyOnValueFunctions:
             optimal_policy.add_policy_rule(state_value, action_value)
         return optimal_policy
 
+    def _policy_iteration(self) -> Tuple[np.ndarray, DiscreteDeterminsticPolicy]:
+        policy = DiscreteDeterminsticPolicy(self._actions_dict)
+        for state_value in self._state_names:
+            policy.add_policy_rule(state_value, random.choice(self._action_names))
 
+        done = False
+        while not done:
+            old_policy = copy(policy)
+
+            V = self._policy_evaluation(policy)
+            policy = self._policy_improvement(V)
+
+            if policy == old_policy:
+                done = True
+
+        return V, policy
