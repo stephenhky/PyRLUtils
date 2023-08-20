@@ -48,6 +48,20 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
     def get_action(self, state: DiscreteState) -> Action:
         return self._actions_dict[self.get_action_value(state.state_value)]
 
+    def __eq__(self, other) -> bool:
+        if len(self._state_to_action) != len(set(self._state_to_action.keys()).union(other._state_to_action.keys())):
+            return False
+        if len(self._actions_dict) != len(set(self._actions_dict.keys()).union(other._actions_dict.keys())):
+            return False
+        for action in self._actions_dict.keys():
+            if self._actions_dict[action] != other._actions_dict[action]:
+                return False
+        for state in self._state_to_action.keys():
+            if self._state_to_action[state] != other._state_to_action[state]:
+                return False
+        return True
+
+
 
 class StochasticPolicy(Policy):
     @abstractmethod
