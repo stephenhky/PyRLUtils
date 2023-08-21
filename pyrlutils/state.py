@@ -1,6 +1,7 @@
 
 from abc import ABC, abstractmethod
 from typing import List, Optional, Union
+from itertools import product
 
 import numpy as np
 
@@ -23,7 +24,7 @@ class State(ABC):
         self.set_state_value(new_state_value)
 
 
-DiscreteStateValueType = Union[float, str]
+DiscreteStateValueType = Union[float, str, List[int]]
 
 
 class DiscreteState(State):
@@ -51,6 +52,10 @@ class DiscreteState(State):
     @state_value.setter
     def state_value(self, new_state_value: DiscreteStateValueType):
         self.set_state_value(new_state_value)
+
+    @property
+    def state_space_size(self):
+        return len(self._state_value)
 
 
 class InvalidRangeError(Exception):
@@ -168,3 +173,10 @@ class ContinuousState(State):
         return self._nbdims
 
 
+class Discrete2DCartesianState(DiscreteState):
+    def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, iniial_coordinate: List[int]=None):
+        all_state_values = [
+            [x, y]
+            for x, y in product(range(x_lowlim, x_hilim+1), range(y_lowlim, y_hilim+1))
+        ]
+        super().__init__(all_state_values, initial_values=iniial_coordinate)
