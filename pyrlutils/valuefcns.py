@@ -2,6 +2,7 @@
 import random
 from copy import copy
 from typing import Tuple
+from itertools import product
 
 import numpy as np
 
@@ -80,6 +81,7 @@ class OptimalPolicyOnValueFunctions:
         policy = DiscreteDeterminsticPolicy(self._actions_dict)
         for state_value in self._state_names:
             policy.add_policy_rule(state_value, random.choice(self._action_names))
+        V = None
 
         done = False
         while not done:
@@ -90,5 +92,35 @@ class OptimalPolicyOnValueFunctions:
 
             if policy == old_policy:
                 done = True
+
+        return V, policy
+
+
+    def _value_iteration(self) -> Tuple[np.ndarray, DiscreteDeterminsticPolicy]:
+        V = np.zeros(len(self._state_names))
+
+        for _ in range(self._policy_evaluation_maxiter):
+            Q = np.zeros((len(self._state_names), len(self._action_names)))
+            for state_value, action_value in product(self._state_names, self._action_names):
+                state_index = self._states_to_indices[state_value]
+                action_index = self._actions_to_indices[action_value]
+                for next_state_tuple in self._transprobfac[state_value][action_value]:
+                    prob = next_state_tuple.probability
+                    reward = next_state_tuple.reward
+                    next_state_value = next_state_tuple.next_state_value
+                    next_state_index = self._states_to_indices[next_state_value]
+                    terminal = next_state_tuple.terminal
+
+                    Q[state_index, action_index] += prob * (reward + (self._gamma * V[next_state_index] if not terminal else 0.))
+
+            if np.max(np.abs(V-np.max(Q, axis=1))) < self._theta:
+                break
+
+        V = np.max(Q, axis=1)
+        Qmaxj = np.argmax(Q, axis=1)
+
+        policy = DiscreteDeterminsticPolicy(self._actions_dict)
+        for state_value, action_index in zip(self._state_names, Qmaxj):
+            policy.add_policy_rule(state_value, self._action_names[action_index])
 
         return V, policy

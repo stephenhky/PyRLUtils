@@ -19,7 +19,7 @@ class Policy(ABC):
 
     @property
     def is_stochastic(self) -> bool:
-        pass
+        raise NotImplemented()
 
 
 class DeterministicPolicy(Policy):
@@ -60,7 +60,6 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
             if self._state_to_action[state] != other._state_to_action[state]:
                 return False
         return True
-
 
 
 class StochasticPolicy(Policy):
