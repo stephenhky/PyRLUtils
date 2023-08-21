@@ -55,7 +55,7 @@ class DiscreteState(State):
 
     @property
     def state_space_size(self):
-        return len(self._state_value)
+        return len(self._all_state_values)
 
 
 class InvalidRangeError(Exception):
