@@ -1,11 +1,12 @@
 
 import random
 from copy import copy
-from typing import Tuple
+from typing import Tuple, Dict
 from itertools import product
 
 import numpy as np
 
+from .state import DiscreteStateValueType
 from .transition import TransitionProbabilityFactory
 from .policy import DiscreteDeterminsticPolicy
 
@@ -124,3 +125,19 @@ class OptimalPolicyOnValueFunctions:
             policy.add_policy_rule(state_value, self._action_names[action_index])
 
         return V, policy
+
+    def policy_iteration(self) -> Tuple[Dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
+        V, policy = self._policy_iteration()
+        state_values_dict = {
+            self._state_names[i]: V[i]
+            for i in range(V.shape[0])
+        }
+        return state_values_dict, policy
+
+    def value_iteration(self) -> Tuple[Dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
+        V, policy = self._value_iteration()
+        state_values_dict = {
+            self._state_names[i]: V[i]
+            for i in range(V.shape[0])
+        }
+        return state_values_dict, policy
