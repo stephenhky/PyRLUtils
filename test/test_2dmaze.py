@@ -300,7 +300,8 @@ class Test2DMaze(unittest.TestCase):
             action = policy.get_action(state)
             action(state)
 
-            if state.state_value[0] == 5 and state.state_value[1] == 4:
+            coordinates = self.maze_state.decode_coordinates(state.state_value)
+            if coordinates[0] == 5 and coordinates[1] == 4:
                 arrived_destination = True
                 break
 

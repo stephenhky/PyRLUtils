@@ -12,7 +12,7 @@ class Test2DDiscreteState(unittest.TestCase):
         assert state.state_value == 0
 
         state.set_state_value(5)
-        assert state.state_value == [1, 2]
+        assert state.decode_coordinates(state.state_value) == [1, 2]
 
 
 
