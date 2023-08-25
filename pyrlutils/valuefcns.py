@@ -23,7 +23,7 @@ class OptimalPolicyOnValueFunctions:
         self._state_names = self._states.get_all_possible_state_values()
         self._states_to_indices = {state: idx for idx, state in enumerate(self._state_names)}
         self._action_names = list(self._actions_dict.keys())
-        self._actions_to_indices = {action_value: idx for idx, action_value in self._action_names}
+        self._actions_to_indices = {action_value: idx for idx, action_value in enumerate(self._action_names)}
 
         self._evaluated = False
         self._improved = False
