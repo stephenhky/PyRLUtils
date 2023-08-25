@@ -39,7 +39,7 @@ class OptimalPolicyOnValueFunctions:
             for state_value in self._state_names:
                 state_index = self._states_to_indices[state_value]
                 action_value = policy.get_action_value(state_value)
-                for next_state_tuple in self._transprobfac[state_value][action_value]:
+                for next_state_tuple in self._transprobfac.transition_probabilities[state_value][action_value]:
                     prob = next_state_tuple.probability
                     reward = next_state_tuple.reward
                     next_state_value = next_state_tuple.next_state_value
@@ -62,7 +62,7 @@ class OptimalPolicyOnValueFunctions:
             state_index = self._states_to_indices[state_value]
             for action_value in self._action_names:
                 action_index = self._actions_to_indices[action_value]
-                for next_state_tuple in self._transprobfac[state_value][action_value]:
+                for next_state_tuple in self._transprobfac.transition_probabilities[state_value][action_value]:
                     prob = next_state_tuple.probability
                     reward = next_state_tuple.reward
                     next_state_value = next_state_tuple.next_state_value
@@ -105,7 +105,7 @@ class OptimalPolicyOnValueFunctions:
             for state_value, action_value in product(self._state_names, self._action_names):
                 state_index = self._states_to_indices[state_value]
                 action_index = self._actions_to_indices[action_value]
-                for next_state_tuple in self._transprobfac[state_value][action_value]:
+                for next_state_tuple in self._transprobfac.transition_probabilities[state_value][action_value]:
                     prob = next_state_tuple.probability
                     reward = next_state_tuple.reward
                     next_state_value = next_state_tuple.next_state_value
