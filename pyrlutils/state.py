@@ -1,7 +1,6 @@
 
 from abc import ABC, abstractmethod
 from typing import Tuple, List, Optional, Union
-from itertools import product
 
 import numpy as np
 
@@ -175,8 +174,23 @@ class ContinuousState(State):
 
 class Discrete2DCartesianState(DiscreteState):
     def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, initial_coordinate: List[int]=None):
-        all_state_values = [
-            (x, y)
-            for x, y in product(range(x_lowlim, x_hilim+1), range(y_lowlim, y_hilim+1))
-        ]
-        super().__init__(all_state_values, initial_values=initial_coordinate)
+        self._x_lowlim = x_lowlim
+        self._x_hilim = x_hilim
+        self._y_lowlim = y_lowlim
+        self._y_hilim = y_hilim
+        self._countx = self._x_hilim - self._x_lowlim + 1
+        self._county = self._y_hilim - self._y_lowlim + 1
+        if initial_coordinate is None:
+            initial_coordinate = [self._x_lowlim, self._y_lowlim]
+        initial_value =  (initial_coordinate[1] - self._y_lowlim) * self._countx + (initial_coordinate[0] - self._x_lowlim)
+        super().__init__(list(range(self._countx*self._county)), initial_values=initial_value)
+
+    def _encode_coordinates(self, x, y) -> int:
+        return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
+
+    def encode_coordinates(self, coordinates: List[int]) -> int:
+        assert len(coordinates) == 2
+        return self._encode_coordinates(coordinates[0], coordinates[1])
+
+    def decode_coordinates(self, hashcode) -> List[int]:
+        return [hashcode % self._countx, hashcode // self._countx]
