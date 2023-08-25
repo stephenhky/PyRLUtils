@@ -30,7 +30,7 @@ class Test2DMaze(unittest.TestCase):
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates[(0, 2]),
+            maze_state.encode_coordinates([0, 2]),
             {
                 'up': [NextStateTuple(maze_state.encode_coordinates([0, 2]), 1., 0., False)],
                 'down': [NextStateTuple(maze_state.encode_coordinates([0, 2]), 1., 0., False)],

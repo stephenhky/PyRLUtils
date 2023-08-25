@@ -9,10 +9,10 @@ class Test2DDiscreteState(unittest.TestCase):
         state = Discrete2DCartesianState(0, 1, 0, 2)
 
         assert state.state_space_size == 6
-        assert state.state_value == (0, 0)
+        assert state.state_value == 0
 
-        state.set_state_value((1, 2))
-        assert state.state_value == (1, 2)
+        state.set_state_value(5)
+        assert state.state_value == [1, 2]
 
 
 
