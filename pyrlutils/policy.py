@@ -37,7 +37,7 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
         self._state_to_action = {}
         self._actions_dict = actions_dict
 
-    def add_policy_rule(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType):
+    def add_deterministic_rule(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType):
         if state_value in self._state_to_action:
             warn('State value {} exists in rule; it will be replaced.'.format(state_value))
         self._state_to_action[state_value] = action_value

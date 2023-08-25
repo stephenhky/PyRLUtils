@@ -75,13 +75,13 @@ class OptimalPolicyOnValueFunctions:
         optimal_action_indices = np.argmax(Q, axis=1)
         for state_value, action_index in zip(self._state_names, optimal_action_indices):
             action_value = self._action_names[action_index]
-            optimal_policy.add_policy_rule(state_value, action_value)
+            optimal_policy.add_deterministic_rule(state_value, action_value)
         return optimal_policy
 
     def _policy_iteration(self) -> Tuple[np.ndarray, DiscreteDeterminsticPolicy]:
         policy = DiscreteDeterminsticPolicy(self._actions_dict)
         for state_value in self._state_names:
-            policy.add_policy_rule(state_value, random.choice(self._action_names))
+            policy.add_deterministic_rule(state_value, random.choice(self._action_names))
         V = None
 
         done = False
@@ -122,7 +122,7 @@ class OptimalPolicyOnValueFunctions:
 
         policy = DiscreteDeterminsticPolicy(self._actions_dict)
         for state_value, action_index in zip(self._state_names, Qmaxj):
-            policy.add_policy_rule(state_value, self._action_names[action_index])
+            policy.add_deterministic_rule(state_value, self._action_names[action_index])
 
         return V, policy
 
