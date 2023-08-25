@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Union
+from typing import Tuple, List, Optional, Union
 from itertools import product
 
 import numpy as np
@@ -24,7 +24,7 @@ class State(ABC):
         self.set_state_value(new_state_value)
 
 
-DiscreteStateValueType = Union[float, str, List[int]]
+DiscreteStateValueType = Union[float, str, Tuple[int]]
 
 
 class DiscreteState(State):
@@ -174,9 +174,9 @@ class ContinuousState(State):
 
 
 class Discrete2DCartesianState(DiscreteState):
-    def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, iniial_coordinate: List[int]=None):
+    def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, initial_coordinate: List[int]=None):
         all_state_values = [
-            [x, y]
+            (x, y)
             for x, y in product(range(x_lowlim, x_hilim+1), range(y_lowlim, y_hilim+1))
         ]
-        super().__init__(all_state_values, initial_values=iniial_coordinate)
+        super().__init__(all_state_values, initial_values=initial_coordinate)
