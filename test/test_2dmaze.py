@@ -297,6 +297,8 @@ class Test2DMaze(unittest.TestCase):
 
         arrived_destination = False
         for _ in range(state.state_space_size*2):
+            action_value = policy.get_action_value(state)
+            print('Action value: {}'.format(action_value))
             action = policy.get_action(state)
             state = action(state)
 
