@@ -298,7 +298,7 @@ class Test2DMaze(unittest.TestCase):
         arrived_destination = False
         for _ in range(state.state_space_size*2):
             action = policy.get_action(state)
-            action(state)
+            state = action(state)
 
             coordinates = self.maze_state.decode_coordinates(state.state_value)
             print('at: {}, {}'.format(coordinates[0], coordinates[1]))
