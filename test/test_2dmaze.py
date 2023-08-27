@@ -301,6 +301,7 @@ class Test2DMaze(unittest.TestCase):
             action(state)
 
             coordinates = self.maze_state.decode_coordinates(state.state_value)
+            print('at: {}, {}'.format(coordinates[0], coordinates[1]))
             if coordinates[0] == 5 and coordinates[1] == 4:
                 arrived_destination = True
                 break
