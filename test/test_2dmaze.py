@@ -287,8 +287,6 @@ class Test2DMaze(unittest.TestCase):
 
     def test_policy_iteration(self):
         policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
-        V, _ = policy_finder._policy_iteration()
-        print(V)
         values_dict, policy = policy_finder.policy_iteration()
 
         for state_value, value in values_dict.items():
@@ -314,8 +312,6 @@ class Test2DMaze(unittest.TestCase):
 
     def test_value_iteration(self):
         policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
-        V, _ = policy_finder._value_iteration()
-        print(V)
         values_dict, policy = policy_finder.value_iteration()
 
         for state_value, value in values_dict.items():
