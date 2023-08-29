@@ -231,7 +231,7 @@ class Test2DMaze(unittest.TestCase):
             maze_state.encode_coordinates([4, 4]),
             {
                 'up': [NextStateTuple(maze_state.encode_coordinates([4, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 0., True)],
+                'down': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)],
                 'left': [NextStateTuple(maze_state.encode_coordinates([4, 3]), 1., 0., False)],
                 'right': [NextStateTuple(maze_state.encode_coordinates([4, 4]), 1., 0., False)]
             }
@@ -269,16 +269,16 @@ class Test2DMaze(unittest.TestCase):
                 'up': [NextStateTuple(maze_state.encode_coordinates([5, 3]), 1., 0., False)],
                 'down': [NextStateTuple(maze_state.encode_coordinates([5, 3]), 1., 0., False)],
                 'left': [NextStateTuple(maze_state.encode_coordinates([5, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 0., True)]
+                'right': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)]
             }
         )
         transprobfactory.add_state_transitions(
             maze_state.encode_coordinates([5, 4]),
             {
                 'up': [NextStateTuple(maze_state.encode_coordinates([4, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 0., True)],
+                'down': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)],
                 'left': [NextStateTuple(maze_state.encode_coordinates([5, 3]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 0., True)]
+                'right': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)]
             }
         )
 
@@ -314,7 +314,7 @@ class Test2DMaze(unittest.TestCase):
 
     def test_value_iteration(self):
         policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
-        V, _ = policy_finder._policy_iteration()
+        V, _ = policy_finder._value_iteration()
         print(V)
         values_dict, policy = policy_finder.value_iteration()
 
