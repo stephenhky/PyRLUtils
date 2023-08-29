@@ -117,7 +117,8 @@ class OptimalPolicyOnValueFunctions:
             if np.max(np.abs(V-np.max(Q, axis=1))) < self._theta:
                 break
 
-        V = np.max(Q, axis=1)
+            V = np.max(Q, axis=1)
+
         Qmaxj = np.argmax(Q, axis=1)
 
         policy = DiscreteDeterminsticPolicy(self._actions_dict)
