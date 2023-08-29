@@ -312,6 +312,33 @@ class Test2DMaze(unittest.TestCase):
 
         assert arrived_destination
 
+    def test_value_iteration(self):
+        policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
+        V, _ = policy_finder._policy_iteration()
+        print(V)
+        values_dict, policy = policy_finder.value_iteration()
+
+        for state_value, value in values_dict.items():
+            [x, y] = self.maze_state.decode_coordinates(state_value)
+            print('({}, {}): {}'.format(x, y, value))
+
+        state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
+
+        arrived_destination = False
+        for _ in range(state.state_space_size*2):
+            action_value = policy.get_action_value(state)
+            print('Action value: {}'.format(action_value))
+            action = policy.get_action(state)
+            state = action(state)
+
+            coordinates = self.maze_state.decode_coordinates(state.state_value)
+            print('at: {}, {}'.format(coordinates[0], coordinates[1]))
+            if coordinates[0] == 5 and coordinates[1] == 4:
+                arrived_destination = True
+                break
+
+        assert arrived_destination
+
 
 
 if __name__ == '__main__':
