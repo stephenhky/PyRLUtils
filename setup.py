@@ -18,7 +18,7 @@ def package_description():
 
 setup(
     name='pyrlutils',
-    version="0.0.2",
+    version="0.0.3a1",
     description="Utility and Helpers for Reinformcement Learning",
     long_description=package_description(),
     long_description_content_type='text/markdown',
