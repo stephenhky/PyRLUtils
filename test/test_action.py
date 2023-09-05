@@ -1,8 +1,6 @@
 
 import unittest
 
-import numpy as np
-
 from pyrlutils.state import DiscreteState
 from pyrlutils.action import Action
 
