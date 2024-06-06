@@ -14,7 +14,7 @@ from .policy import DiscreteDeterminsticPolicy
 class OptimalPolicyOnValueFunctions:
     def __init__(self, discount_factor: float, transprobfac: TransitionProbabilityFactory):
         try:
-            assert discount_factor >= 0. and discount_factor <= 1.
+            assert 0. <= discount_factor <= 1.
         except AssertionError:
             raise ValueError('Discount factor must be between 0 and 1.')
         self._gamma = discount_factor
