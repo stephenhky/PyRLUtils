@@ -37,7 +37,7 @@ setup(
     ],
     keywords="machine learning, reinforcement leaning, artifiial intelligence",
     url="https://github.com/stephenhky/PyRLUtils",
-    author="Kwan-Yuet Ho",
+    author="Kwan Yuet Stephen Ho",
     author_email="stephenhky@yahoo.com.hk",
     license='MIT',
     packages=[
