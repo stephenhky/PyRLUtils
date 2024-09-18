@@ -34,7 +34,7 @@ Repository = "https://github.com/stephenhky/PyRLUtils"
 Issues = "https://github.com/stephenhky/PyRLUtils/issues"
 
 [tool.setuptools]
-packages = ["pyrlutils"]
+packages = ["pyrlutils", "pyrlutils.openai"]
 zip-safe = false
 
 [project.optional-dependencies]
