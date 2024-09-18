@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm", "wheel"]
 
 [project]
 name = "pyrlutils"
-version = "0.0.3a1"
+version = "0.0.3"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
