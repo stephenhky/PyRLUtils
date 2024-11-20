@@ -22,7 +22,7 @@ class Policy(ABC):
         raise NotImplemented()
 
 
-class DeterministicPolicy(Policy):
+class DeterministicPolicy(ABC, Policy):
     @abstractmethod
     def add_deterministic_rule(self, *args, **kwargs):
         pass
@@ -62,7 +62,7 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
         return True
 
 
-class StochasticPolicy(Policy):
+class StochasticPolicy(ABC, Policy):
     @abstractmethod
     def get_probability(self, *args, **kwargs) -> float:
         pass
@@ -72,13 +72,13 @@ class StochasticPolicy(Policy):
         return True
 
 
-class DiscreteStochasticPolicy(StochasticPolicy):
+class DiscreteStochasticPolicy(ABC, StochasticPolicy):
     @abstractmethod
     def get_probability(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType) -> float:
         pass
 
 
-class ContinuousStochasticPolicy(StochasticPolicy):
+class ContinuousStochasticPolicy(ABC, StochasticPolicy):
     @abstractmethod
     def get_probability(self, state_value: Union[float, np.ndarray], action_value: DiscreteActionValueType, value: Union[float, np.ndarray]) -> float:
         pass
