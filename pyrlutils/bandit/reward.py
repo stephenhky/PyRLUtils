@@ -1,7 +1,11 @@
 
-from ..reward import IndividualRewardFunction
+from abc import ABC, abstractmethod
 
 
-class IndividualBanditRewardFunction(IndividualRewardFunction):
+class IndividualBanditRewardFunction(ABC):
+    @abstractmethod
+    def reward(self, action_value) -> float:
+        pass
+
     def __call__(self, action_value) -> float:
-        return self.reward(None, action_value, None)
+        return self.reward(action_value)
