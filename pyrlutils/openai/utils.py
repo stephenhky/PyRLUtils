@@ -7,11 +7,12 @@ from ..transition import TransitionProbabilityFactory, NextStateTuple
 class OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory(TransitionProbabilityFactory):
     def __init__(self, envname):
         super().__init__()
-        self.gymenv = gym.make(envname)
+        self._envname = envname
+        self._gymenv = gym.make(envname)
         self._convert_openai_gymenv_to_transprob()
 
     def _convert_openai_gymenv_to_transprob(self):
-        P = self.gymenv.env.P
+        P = self._gymenv.env.P
         for state_value, trans_dict in P.items():
             new_trans_dict = {}
             for action_value, next_state_list in trans_dict.items():
@@ -20,3 +21,11 @@ class OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory(TransitionProbabi
                     for next_state in next_state_list
                 ]
             self.add_state_transitions(state_value, new_trans_dict)
+
+    @property
+    def envname(self):
+        return self._envname
+
+    @property
+    def gymenv(self):
+        return self._gymenv
