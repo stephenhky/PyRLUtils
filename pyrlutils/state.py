@@ -1,8 +1,37 @@
 
 from abc import ABC, abstractmethod
+from enum import Enum
+from dataclasses import dataclass
 from typing import Tuple, List, Optional, Union
 
 import numpy as np
+
+
+class StateValue(ABC):
+    @property
+    @abstractmethod
+    def value(self):
+        pass
+
+
+@dataclass
+class DiscreteStateValue(StateValue):
+    enum: Enum
+
+    @property
+    def value(self):
+        return self.enum.value
+
+    def name(self):
+        return self.enum.name
+
+
+class ContinuousStateValue(StateValue):
+    _value: float
+
+    @property
+    def value(self) -> float:
+        return self._value
 
 
 class State(ABC):
@@ -23,7 +52,7 @@ class State(ABC):
         self.set_state_value(new_state_value)
 
 
-DiscreteStateValueType = Union[float, str, Tuple[int]]
+DiscreteStateValueType = Union[float, str, Tuple[int], Enum]
 
 
 class DiscreteState(State):
@@ -182,7 +211,7 @@ class Discrete2DCartesianState(DiscreteState):
         self._county = self._y_hilim - self._y_lowlim + 1
         if initial_coordinate is None:
             initial_coordinate = [self._x_lowlim, self._y_lowlim]
-        initial_value =  (initial_coordinate[1] - self._y_lowlim) * self._countx + (initial_coordinate[0] - self._x_lowlim)
+        initial_value = (initial_coordinate[1] - self._y_lowlim) * self._countx + (initial_coordinate[0] - self._x_lowlim)
         super().__init__(list(range(self._countx*self._county)), initial_values=initial_value)
 
     def _encode_coordinates(self, x, y) -> int:
