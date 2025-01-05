@@ -18,12 +18,10 @@ shared: &shared
         command: |
           pip install --upgrade --user pip
           pip install --upgrade --user .
-          pip install --upgrade --user .[openaigym]
 
     - run:
         name: Run Unit Tests
         command: |
-          pip install --upgrade --user git+https://github.com/mimoralea/gym-walk#egg=gym-walk
           python -m unittest
 
 
