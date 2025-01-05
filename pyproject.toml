@@ -38,5 +38,4 @@ packages = ["pyrlutils", "pyrlutils.openai"]
 zip-safe = false
 
 [project.optional-dependencies]
-openaigym = ["gym", "pygame", "gymnasium"]
 test = ["unittest"]
