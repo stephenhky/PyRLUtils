@@ -12,7 +12,7 @@ class OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory(TransitionProbabi
         self._convert_openai_gymenv_to_transprob()
 
     def _convert_openai_gymenv_to_transprob(self):
-        P = self._gymenv.env.P
+        P = self._gymenv.env.env.env.P
         for state_value, trans_dict in P.items():
             new_trans_dict = {}
             for action_value, next_state_list in trans_dict.items():
