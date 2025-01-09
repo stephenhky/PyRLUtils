@@ -1,14 +1,49 @@
 
+from abc import ABC, abstractmethod
+
 import numpy as np
 
 from .reward import IndividualBanditRewardFunction
 
 
-class SimpleBandit:
-    def __init__(self, action_values: list, reward_function: IndividualBanditRewardFunction, epsilon: float=0.05):
-        self._epsilon = epsilon
+class BanditAlgorithm(ABC):
+    def __init__(self, action_values: list, reward_function: IndividualBanditRewardFunction):
         self._action_values = action_values
         self._reward_function = reward_function
+
+    @abstractmethod
+    def _go_one_loop(self):
+        pass
+
+    def loop(self, nbiterations: int):
+        for _ in range(nbiterations):
+            self._go_one_loop()
+
+    def reward(self, action_value) -> float:
+        return self._reward_function(action_value)
+
+    @abstractmethod
+    def get_action(self):
+        pass
+
+    @property
+    def action_values(self):
+        return self._action_values
+
+    @property
+    def reward_function(self) -> IndividualBanditRewardFunction:
+        return self._reward_function
+
+
+class SimpleBandit(BanditAlgorithm):
+    def __init__(
+            self,
+            action_values: list,
+            reward_function: IndividualBanditRewardFunction,
+            epsilon: float=0.05
+    ):
+        super().__init__(action_values, reward_function)
+        self._epsilon = epsilon
         self._initialize()
 
     def _initialize(self):
@@ -25,38 +60,22 @@ class SimpleBandit:
         self._N[selected_action_idx] += 1
         self._Q[selected_action_idx] += (reward - self._Q[selected_action_idx]) / self._N[selected_action_idx]
 
-    def loop(self, nbiterations: int):
-        for _ in range(nbiterations):
-            self._go_one_loop()
-
     def get_action(self):
         selected_action_idx = np.argmax(self._Q)
         return self._action_values[selected_action_idx]
 
-    def reward(self, action_value) -> float:
-        return self._reward_function(action_value)
-
-    @property
-    def action_values(self):
-        return self._action_values
-
     @property
     def epsilon(self) -> float:
         return self._epsilon
-
-    @property
-    def reward_function(self) -> IndividualBanditRewardFunction:
-        return self._reward_function
 
     @epsilon.setter
     def epsilon(self, val: float):
         self._epsilon = val
 
 
-class GradientBandit:
+class GradientBandit(BanditAlgorithm):
     def __init__(self, action_values: list, reward_function: IndividualBanditRewardFunction, temperature: float=1.0, alpha: float=0.1):
-        self._action_values = action_values
-        self._reward_function = reward_function
+        super().__init__(action_values, reward_function)
         self._T = temperature
         self._alpha = alpha
         self._initialize()
@@ -86,18 +105,6 @@ class GradientBandit:
                 self._preferences[i] += self.alpha * (reward - average_reward) * (1 - probs[i])
             else:
                 self._preferences[i] -= self.alpha * (reward - average_reward) * probs[i]
-
-    def loop(self, nbiterations: int):
-        for _ in range(nbiterations):
-            self._go_one_loop()
-
-    @property
-    def action_values(self):
-        return self._action_values
-
-    @property
-    def reward_function(self) -> IndividualBanditRewardFunction:
-        return self._reward_function
 
     @property
     def alpha(self) -> float:
