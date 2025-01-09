@@ -32,3 +32,22 @@ class SimpleBandit:
     def get_action(self):
         selected_action_idx = np.argmax(self._Q)
         return self._action_values[selected_action_idx]
+
+    def reward(self, action_value) -> float:
+        return self._reward_function(action_value)
+
+    @property
+    def action_values(self):
+        return self._action_values
+
+    @property
+    def epsilon(self) -> float:
+        return self._epsilon
+
+    @property
+    def reward_function(self) -> IndividualBanditRewardFunction:
+        return self._reward_function
+
+    @epsilon.setter
+    def epsilon(self, val: float):
+        self._epsilon = val
