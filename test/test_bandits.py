@@ -34,11 +34,21 @@ class TestBandits(unittest.TestCase):
         assert simple_bandit_BW._Q.shape[0] == len(list(BanditWalk))
         assert len(simple_bandit_BW.action_values) == len(list(BanditWalk))
 
+        # go for 100 loops
+        simple_bandit_BW.loop(100)
+
+        assert simple_bandit_BW.get_action() == BanditWalk.RIGHT
+
     def test_simple_bandit_BSW(self):
         simple_bandit_BSW = SimpleBandit(list(BanditWalk), BanditSlipperyWalkReward())
 
         assert simple_bandit_BSW._Q.shape[0] == len(list(BanditWalk))
         assert len(simple_bandit_BSW.action_values) == len(list(BanditWalk))
+
+        # go for 100 loops
+        simple_bandit_BSW.loop(100)
+
+        assert simple_bandit_BSW.get_action() == BanditWalk.RIGHT
 
 
 
