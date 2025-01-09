@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyrlutils"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -14,18 +14,18 @@ license = {text = "MIT"}
 keywords = ["machine learning", "reinforcement leaning", "artificial intelligence"]
 requires-python = ">=3.7"
 classifiers = [
-  "Topic :: Scientific/Engineering :: Mathematics",
-  "License :: OSI Approved :: MIT License",
-      "Topic :: Software Development :: Libraries :: Python Modules",
-      "Topic :: Software Development :: Version Control :: Git",
-      "Programming Language :: Python :: 3.7",
-      "Programming Language :: Python :: 3.8",
-      "Programming Language :: Python :: 3.9",
-      "Programming Language :: Python :: 3.10",
-      "Programming Language :: Python :: 3.11",
-      "Programming Language :: Python :: 3.12",
-      "Intended Audience :: Science/Research",
-      "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
 ]
 dependencies = ["numpy"]
 
@@ -34,9 +34,9 @@ Repository = "https://github.com/stephenhky/PyRLUtils"
 Issues = "https://github.com/stephenhky/PyRLUtils/issues"
 
 [tool.setuptools]
-packages = ["pyrlutils"]
+packages = ["pyrlutils", "pyrlutils.bandit", "pyrlutils.openai"]
 zip-safe = false
 
 [project.optional-dependencies]
-openaigym = ["gym"]
+openaigym = ["gymnasium"]
 test = ["unittest"]

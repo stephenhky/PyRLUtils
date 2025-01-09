@@ -21,7 +21,7 @@ class RewardFunction(ABC):
         return self._discount_factor
 
     @discount_factor.setter
-    def discount_factor(self, discount_factor):
+    def discount_factor(self, discount_factor: float):
         self._discount_factor = discount_factor
 
     def individual_reward(self, state_value, action_value, next_state_value) -> float:

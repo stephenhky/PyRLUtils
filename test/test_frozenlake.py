@@ -1,7 +1,8 @@
 
 import unittest
 
-from pyrlutils.transition import OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory
+from pyrlutils.openai.utils import OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory
+
 
 class TestFrozenLake(unittest.TestCase):
     def test_factory(self):
