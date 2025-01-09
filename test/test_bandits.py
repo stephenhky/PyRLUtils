@@ -1,11 +1,12 @@
 
 import unittest
 from enum import Enum
-
 import random
 
+import numpy as np
+
 from pyrlutils.bandit.reward import IndividualBanditRewardFunction
-from pyrlutils.bandit.algo import SimpleBandit
+from pyrlutils.bandit.algo import SimpleBandit, GradientBandit
 
 
 class BanditWalk(Enum):
@@ -50,6 +51,31 @@ class TestBandits(unittest.TestCase):
 
         assert simple_bandit_BSW.get_action() == BanditWalk.RIGHT
 
+    def test_gradient_bandit_BW(self):
+        gradient_bandit_BW = GradientBandit(list(BanditWalk), BanditWalkReward())
+
+        assert gradient_bandit_BW._preferences.shape[0] == len(list(BanditWalk))
+        probs = gradient_bandit_BW._get_probs()
+        self.assertAlmostEqual(probs[0], 0.5)
+        self.assertAlmostEqual(probs[1], 0.5)
+
+        # go for 100 loops
+        gradient_bandit_BW.loop(100)
+
+        assert gradient_bandit_BW.get_action() == BanditWalk.RIGHT
+
+    def test_gradient_bandit_BSW(self):
+        gradient_bandit_BSW = GradientBandit(list(BanditWalk), BanditSlipperyWalkReward())
+
+        assert gradient_bandit_BSW._preferences.shape[0] == len(list(BanditWalk))
+        probs = gradient_bandit_BSW._get_probs()
+        self.assertAlmostEqual(probs[0], 0.5)
+        self.assertAlmostEqual(probs[1], 0.5)
+
+        # go for 100 loops
+        gradient_bandit_BSW.loop(100)
+
+        assert gradient_bandit_BSW.get_action() == BanditWalk.RIGHT
 
 
 if __name__ == '__main__':
