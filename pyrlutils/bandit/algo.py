@@ -76,7 +76,7 @@ class GradientBandit:
 
     def _go_one_loop(self):
         probs = self._get_probs()
-        selected_action_idx = np.argmax(self._preferences)
+        selected_action_idx = np.random.choice(range(self._preferences.shape[0]), p=probs)
         reward = self._reward_function(self._action_values[selected_action_idx])
         self._rewards_over_time.append(reward)
         average_reward = np.mean(self._rewards_over_time) if len(self._rewards_over_time) > 0 else 0.
