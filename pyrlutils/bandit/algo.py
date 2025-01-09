@@ -85,6 +85,7 @@ class GradientBandit(BanditAlgorithm):
         self._rewards_over_time = []
 
     def _get_probs(self) -> np.ndarray:
+        # getting probabilities using softmax
         exp_preferences = np.exp(self._preferences / self.T)
         sum_exp_preferences = np.sum(exp_preferences)
         return exp_preferences / sum_exp_preferences
@@ -121,3 +122,7 @@ class GradientBandit(BanditAlgorithm):
     @T.setter
     def T(self, val: float):
         self._T = val
+
+    @property
+    def temperature(self) -> float:
+        return self._T
