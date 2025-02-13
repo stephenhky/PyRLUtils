@@ -2,7 +2,7 @@
 import unittest
 
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
-from pyrlutils.valuefcns import OptimalPolicyOnValueFunctions
+from pyrlutils.dp.valuefcns import OptimalPolicyOnValueFunctions
 from pyrlutils.state import Discrete2DCartesianState
 
 
