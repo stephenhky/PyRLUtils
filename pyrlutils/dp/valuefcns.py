@@ -6,9 +6,9 @@ from itertools import product
 
 import numpy as np
 
-from pyrlutils.state import DiscreteStateValueType
-from pyrlutils.transition import TransitionProbabilityFactory
-from pyrlutils.policy import DiscreteDeterminsticPolicy
+from ..state import DiscreteStateValueType
+from ..transition import TransitionProbabilityFactory
+from ..policy import DiscreteDeterminsticPolicy
 
 
 class OptimalPolicyOnValueFunctions:
