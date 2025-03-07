@@ -109,8 +109,8 @@ class DiscreteStochasticPolicy(StochasticPolicy):
             return 0.0
 
     def get_action_value(self, state: State) -> DiscreteActionValueType:
-        allowed_actions = list(self._state_to_action.keys())
-        probs = np.array(list(self._state_to_action.values()))
+        allowed_actions = list(self._state_to_action[state].keys())
+        probs = np.array(list(self._state_to_action[state].values()))
         sumprobs = np.sum(probs)
         return np.random.choice(allowed_actions, p=probs/sumprobs)
 
