@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-from typing import Union, Dict
+from typing import Union, Dict, List
 from warnings import warn
 
 import numpy as np
@@ -12,6 +12,10 @@ from .action import Action, DiscreteActionValueType
 class Policy(ABC):
     @abstractmethod
     def get_action(self, state: State) -> Action:
+        pass
+
+    @abstractmethod
+    def get_action_value(self, state: State) -> DiscreteActionValueType:
         pass
 
     def __call__(self, state: State) -> Action:
@@ -64,7 +68,7 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
 
 class StochasticPolicy(Policy):
     @abstractmethod
-    def get_probability(self, *args, **kwargs) -> float:
+    def get_probability(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType) -> float:
         pass
 
     @property
@@ -73,9 +77,49 @@ class StochasticPolicy(Policy):
 
 
 class DiscreteStochasticPolicy(StochasticPolicy):
-    @abstractmethod
+    def __init__(self, actions_dict: Dict[DiscreteActionValueType, Action]):
+        self._state_to_action = {}
+        self._actions_dict = actions_dict
+
+    def add_stochastic_rule(
+            self,
+            state_value: DiscreteStateValueType,
+            action_values: List[DiscreteActionValueType],
+            probs: Union[List[float], np.ndarray] = None
+    ):
+        if probs is not None:
+            assert len(action_values) == len(probs)
+            probs = np.array(probs)
+        else:
+            probs = np.repeat(1./len(action_values), len(action_values))
+
+        if state_value in self._state_to_action:
+            warn('State value {} exists in rule; it will be replaced.'.format(state_value))
+        self._state_to_action[state_value] = {
+            action_value: prob
+            for action_value, prob in zip(action_values, probs)
+        }
+
     def get_probability(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType) -> float:
-        pass
+        if state_value not in self._state_to_action:
+            return 0.0
+        if action_value in self._state_to_action[state_value]:
+            return self._state_to_action[state_value][action_value]
+        else:
+            return 0.0
+
+    def get_action_value(self, state: State) -> DiscreteActionValueType:
+        allowed_actions = list(self._state_to_action.keys())
+        probs = np.array(list(self._state_to_action.values()))
+        sumprobs = np.sum(probs)
+        return np.random.choice(allowed_actions, p=probs/sumprobs)
+
+    def get_action(self, state: DiscreteState) -> Action:
+        return self._actions_dict[self.get_action_value(state.state_value)]
+
+    @property
+    def is_stochastic(self) -> bool:
+        return True
 
 
 class ContinuousStochasticPolicy(StochasticPolicy):

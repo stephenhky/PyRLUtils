@@ -17,4 +17,5 @@ class TDLearner:
         self._action_names = list(self._actions_dict.keys())
         self._actions_to_indices = {action_value: idx for idx, action_value in enumerate(self._action_names)}
 
-        self._policy = DiscreteDeterminsticPolicy(self._actions_dict)
+
+
