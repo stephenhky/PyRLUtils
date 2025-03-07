@@ -38,12 +38,20 @@ class TestPolicy(unittest.TestCase):
         policy.add_stochastic_rule(2, ['left', 'right'], probs=[0.4, 0.6])
 
         assert policy.get_action_value(1) == 'right'
+        self.assertAlmostEqual(policy.get_probability(1, 'right'), 1.0)
+        self.assertAlmostEqual(policy.get_probability(1, 'left'), 0.0)
+
         assert policy.get_action_value(0) in ['left', 'right']
         assert policy.get_action_value(0) in ['left', 'right']
         assert policy.get_action_value(0) in ['left', 'right']
+        self.assertAlmostEqual(policy.get_probability(0, 'right'), 0.5)
+        self.assertAlmostEqual(policy.get_probability(0, 'left'), 0.5)
+
         assert policy.get_action_value(2) in ['left', 'right']
         assert policy.get_action_value(2) in ['left', 'right']
         assert policy.get_action_value(2) in ['left', 'right']
+        self.assertAlmostEqual(policy.get_probability(2, 'right'), 0.6)
+        self.assertAlmostEqual(policy.get_probability(2, 'left'), 0.4)
 
 
 if __name__ == '__main__':
