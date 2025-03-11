@@ -126,3 +126,6 @@ class ContinuousStochasticPolicy(StochasticPolicy):
     @abstractmethod
     def get_probability(self, state_value: Union[float, np.ndarray], action_value: DiscreteActionValueType, value: Union[float, np.ndarray]) -> float:
         pass
+
+
+DiscretePolicy = Union[DiscreteDeterminsticPolicy, DiscreteStochasticPolicy]
