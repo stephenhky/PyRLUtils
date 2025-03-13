@@ -117,10 +117,6 @@ class DiscreteStochasticPolicy(StochasticPolicy):
     def get_action(self, state: DiscreteState) -> Action:
         return self._actions_dict[self.get_action_value(state.state_value)]
 
-    @property
-    def is_stochastic(self) -> bool:
-        return True
-
 
 class ContinuousStochasticPolicy(StochasticPolicy):
     @abstractmethod
