@@ -1,6 +1,4 @@
 
-from typing import Union
-
 import numpy as np
 
 from ..policy import DiscretePolicy
