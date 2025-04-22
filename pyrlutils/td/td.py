@@ -26,8 +26,8 @@ class TDLearner:
             raise ValueError("alpha_decay_ratio must be between 0 and 1!")
         self._alpha_decay_ratio = alpha_decay_ratio
         self._transprobfac = transprobfac
-        self._states, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
-        self._state_names = self._states.get_all_possible_state_values()
+        self._state, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
+        self._state_names = self._state.get_all_possible_state_values()
         self._states_to_indices = {state: idx for idx, state in enumerate(self._state_names)}
         self._action_names = list(self._actions_dict.keys())
         self._actions_to_indices = {action_value: idx for idx, action_value in enumerate(self._action_names)}
@@ -41,10 +41,15 @@ class TDLearner:
     def learn(self, episodes: int):
         V = np.zeros(self.nb_states)
         V_track = np.zeros((episodes, self.nb_states))
-        alphas = decay_schedule(self._init_alpha, self._min_alpha, self._alpha_decay_ratio, episodes)
+        alphas = decay_schedule(
+            self._init_alpha, self._min_alpha, self._alpha_decay_ratio, episodes
+        )
 
         for i in range(episodes):
-            pass
+            self._state.set_state_value(self._init_state_index)
+            done = False
+            while not done:
+                action_value = self._policy.get_action_value(self._state)
 
     @property
     def nb_states(self) -> int:
