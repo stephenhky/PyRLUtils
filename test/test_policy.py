@@ -37,7 +37,7 @@ class TestPolicy(unittest.TestCase):
         policy.add_stochastic_rule(1, ['right'], probs=[1.])
         policy.add_stochastic_rule(2, ['left', 'right'], probs=[0.4, 0.6])
 
-        assert policy.is_stochastic()
+        assert policy.is_stochastic
 
         assert policy.get_action_value(1) == 'right'
         self.assertAlmostEqual(policy.get_probability(1, 'right'), 1.0)
