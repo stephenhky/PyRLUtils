@@ -7,52 +7,15 @@ from typing import Tuple, List, Optional, Union
 import numpy as np
 
 
-class StateValue(ABC):
-    @property
-    @abstractmethod
-    def value(self):
-        pass
-
-
 @dataclass
-class DiscreteStateValue(StateValue):
-    enum: Enum
-
+class State(ABC):
+    @abstractmethod
     @property
     def value(self):
-        return self.enum.value
-
-    def name(self):
-        return self.enum.name
+        raise NotImplemented()
 
 
-class ContinuousStateValue(StateValue):
-    _value: float
-
-    @property
-    def value(self) -> float:
-        return self._value
-
-
-class State(ABC):
-    @property
-    def state_value(self):
-        return self.get_state_value()
-
-    @abstractmethod
-    def set_state_value(self, state_value):
-        pass
-
-    @abstractmethod
-    def get_state_value(self):
-        pass
-
-    @state_value.setter
-    def state_value(self, new_state_value):
-        self.set_state_value(new_state_value)
-
-
-DiscreteStateValueType = Union[float, str, Tuple[int], Enum]
+DiscreteStateValueType = Union[str, int, tuple[int], Enum]
 
 
 class DiscreteState(State):
