@@ -3,7 +3,7 @@ import sys
 from abc import ABC
 from enum import Enum
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np
 from nptyping import NDArray, Shape, Float
@@ -231,9 +231,9 @@ class Discrete2DCartesianState(DiscreteState):
     def _encode_coordinates(self, x, y) -> int:
         return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
 
-    def encode_coordinates(self, coordinates: List[int]) -> int:
+    def encode_coordinates(self, coordinates: list[int]) -> int:
         assert len(coordinates) == 2
         return self._encode_coordinates(coordinates[0], coordinates[1])
 
-    def decode_coordinates(self, hashcode) -> List[int]:
+    def decode_coordinates(self, hashcode) -> list[int]:
         return [hashcode % self._countx, hashcode // self._countx]

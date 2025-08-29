@@ -1,6 +1,6 @@
 
-from types import LambdaType
-from typing import Tuple, Dict
+from types import LambdaType, FunctionType
+from typing import Union
 
 import numpy as np
 
@@ -40,7 +40,11 @@ class TransitionProbabilityFactory:
         self._all_action_values = []
         self._objects_generated = False
 
-    def add_state_transitions(self, state_value: DiscreteStateValueType, action_values_to_next_state: dict):
+    def add_state_transitions(
+            self,
+            state_value: DiscreteStateValueType,
+            action_values_to_next_state: dict[DiscreteActionValueType, list[NextStateTuple]]
+    ):
         if state_value not in self._all_state_values:
             self._all_state_values.append(state_value)
 
@@ -69,7 +73,10 @@ class TransitionProbabilityFactory:
 
         self._transprobs[state_value] = this_state_transition_dict
 
-    def _get_probs_for_eachstate(self, action_value: DiscreteActionValueType) -> Dict[DiscreteStateValueType, NextStateTuple]:
+    def _get_probs_for_eachstate(
+            self,
+            action_value: DiscreteActionValueType
+    ) -> dict[DiscreteStateValueType, list[NextStateTuple]]:
         state_nexttuples = {}
         for state_value, action_nexttuples_pair in self._transprobs.items():
             for this_action_value, nexttuples in action_nexttuples_pair.items():
@@ -77,7 +84,10 @@ class TransitionProbabilityFactory:
                     state_nexttuples[state_value] = nexttuples
         return state_nexttuples
 
-    def _generate_action_function(self, state_nexttuples: dict) -> LambdaType:
+    def _generate_action_function(
+            self,
+            state_nexttuples: dict[DiscreteStateValueType, list[NextStateTuple]]
+    ) -> Union[FunctionType, LambdaType]:
 
         def _action_function(state: DiscreteState) -> DiscreteState:
             nexttuples = state_nexttuples[state.state_value]
@@ -91,7 +101,11 @@ class TransitionProbabilityFactory:
 
     def _generate_individual_reward_function(self) -> IndividualRewardFunction:
 
-        def _individual_reward_function(state_value, action_value, next_state_value) -> float:
+        def _individual_reward_function(
+                state_value: DiscreteStateValueType,
+                action_value: DiscreteActionValueType,
+                next_state_value: DiscreteStateValueType
+        ) -> float:
             if state_value not in self._transprobs.keys():
                 return 0.
 
@@ -108,12 +122,22 @@ class TransitionProbabilityFactory:
             def __init__(self):
                 super().__init__()
 
-            def reward(self, state_value, action_value, next_state_value) -> float:
+            def reward(
+                    self,
+                    state_value: DiscreteStateValueType,
+                    action_value: DiscreteActionValueType,
+                    next_state_value: DiscreteStateValueType
+            ) -> float:
                 return _individual_reward_function(state_value, action_value, next_state_value)
 
         return ThisIndividualRewardFunction()
 
-    def get_probability(self, state_value, action_value, new_state_value) -> float:
+    def get_probability(
+            self,
+            state_value: DiscreteStateValueType,
+            action_value: DiscreteActionValueType,
+            new_state_value: DiscreteStateValueType
+    ) -> float:
         if state_value not in self._transprobs.keys():
             return 0.
 
@@ -127,10 +151,10 @@ class TransitionProbabilityFactory:
         return probs
 
     @property
-    def transition_probabilities(self) -> dict:
+    def transition_probabilities(self) -> dict[DiscreteStateValueType, dict[DiscreteActionValueType, list[NextStateTuple]]]:
         return self._transprobs
 
-    def generate_mdp_objects(self) -> Tuple[DiscreteState, Dict[DiscreteActionValueType, Action], IndividualRewardFunction]:
+    def generate_mdp_objects(self) -> tuple[DiscreteState, dict[DiscreteActionValueType, Action], IndividualRewardFunction]:
         state = DiscreteState(self._all_state_values)
         actions_dict = {}
         for action_value in self._all_action_values:
