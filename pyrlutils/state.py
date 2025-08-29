@@ -54,7 +54,7 @@ class DiscreteState(State):
         else:
             raise ValueError('State value {} is invalid.'.format(state_value))
 
-    def get_all_possible_state_values(self) -> List[DiscreteStateValueType]:
+    def get_all_possible_state_values(self) -> list[DiscreteStateValueType]:
         return self._all_state_values
 
     @property
