@@ -28,7 +28,7 @@ DiscreteStateValueType = Union[str, int, tuple[int], Enum]
 class DiscreteState(State):
     def __init__(
             self,
-            all_state_values: List[DiscreteStateValueType],
+            all_state_values: list[DiscreteStateValueType],
             initial_value: Optional[DiscreteStateValueType] = None
     ):
         super().__init__()
@@ -216,7 +216,7 @@ class ContinuousState(State):
 
 
 class Discrete2DCartesianState(DiscreteState):
-    def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, initial_coordinate: List[int]=None):
+    def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, initial_coordinate: list[int]=None):
         self._x_lowlim = x_lowlim
         self._x_hilim = x_hilim
         self._y_lowlim = y_lowlim
