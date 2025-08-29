@@ -3,7 +3,8 @@ import unittest
 
 import numpy as np
 
-from pyrlutils.state import DiscreteState, ContinuousState, InvalidRangeError
+from pyrlutils.state import DiscreteState, ContinuousState
+from pyrlutils.helpers.exceptions import InvalidRangeError
 
 
 class TestState(unittest.TestCase):

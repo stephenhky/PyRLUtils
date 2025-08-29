@@ -2,9 +2,11 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from dataclasses import dataclass
-from typing import Tuple, List, Optional, Union
+from typing import List, Optional, Union
 
 import numpy as np
+
+from .helpers.exceptions import InvalidRangeError
 
 
 @dataclass
@@ -19,17 +21,31 @@ DiscreteStateValueType = Union[str, int, tuple[int], Enum]
 
 
 class DiscreteState(State):
-    def __init__(self, all_state_values: List[DiscreteStateValueType], initial_values: Optional[List[DiscreteStateValueType]] = None):
+    def __init__(
+            self,
+            all_state_values: List[DiscreteStateValueType],
+            initial_value: Optional[DiscreteStateValueType] = None
+    ):
         super().__init__()
         self._all_state_values = all_state_values
-        self._state_value = initial_values if initial_values is not None and initial_values in self._all_state_values else self._all_state_values[0]
+        self._state_values_to_indices = {
+            state_value: idx
+            for idx, state_value in enumerate(self._all_state_values)
+        }
+        if initial_value is not None:
+            self._current_index = self._state_values_to_indices[initial_value]
+        else:
+            self._current_index = 0
+
+    def _get_state_value_from_index(self, index: int) -> DiscreteStateValueType:
+        return self._all_state_values[index]
 
     def get_state_value(self) -> DiscreteStateValueType:
-        return self._state_value
+        return self._get_state_value_from_index(self._current_index)
 
     def set_state_value(self, state_value: DiscreteStateValueType):
         if state_value in self._all_state_values:
-            self._state_value = state_value
+            self._current_index = self._get_state_value_from_index(state_value)
         else:
             raise ValueError('State value {} is invalid.'.format(state_value))
 
@@ -37,8 +53,12 @@ class DiscreteState(State):
         return self._all_state_values
 
     @property
+    def state_index(self) -> int:
+        return self._current_index
+
+    @property
     def state_value(self) -> DiscreteStateValueType:
-        return self._state_value
+        return self._all_state_values[self._current_index]
 
     @state_value.setter
     def state_value(self, new_state_value: DiscreteStateValueType):
@@ -49,14 +69,14 @@ class DiscreteState(State):
         return len(self._all_state_values)
 
 
-class InvalidRangeError(Exception):
-    def __init__(self, message=None):
-        self.message = "Invalid range error!" if message is None else message
-        super().__init__(self.message)
-
-
 class ContinuousState(State):
-    def __init__(self, nbdims: int, ranges: np.array, init_value: Optional[Union[float, np.ndarray]] = None):
+    def __init__(
+            self,
+            nbdims: int,
+            ranges: np.array,
+            init_value: Optional[Union[float, np.ndarray]] = None
+    ):
+        super().__init__()
         self._nbdims = nbdims
 
         try:
@@ -109,30 +129,30 @@ class ContinuousState(State):
                     raise ValueError('Initialized value does not have the right dimension.')
                 for i in range(self._nbdims):
                     try:
-                        assert (init_value[i] >= self._ranges[i, 0]) and (init_value[i] <= self.ranges[i, 1])
+                        assert self._ranges[i, 0] <= init_value[i] <= self.ranges[i, 1]
                     except AssertionError:
                         raise InvalidRangeError('Initialized value at dimension {} (value: {}) is not within the permitted range ({} -> {})!'.format(i, init_value[i], self._ranges[i, 0], self._ranges[i, 1]))
             else:
                 try:
-                    assert (init_value >= self._ranges[0, 0]) and (init_value <= self.ranges[0, 1])
+                    assert self._ranges[0, 0] <= init_value <= self.ranges[0, 1]
                 except AssertionError:
                     raise InvalidRangeError('Initialized value is out of range.')
             self._state_value = init_value
 
     def set_state_value(self, state_value: Union[float, np.ndarray]):
-        if self.nbdims > 1:
+        if self._nbdims > 1:
             try:
                 assert state_value.shape[0] == self._nbdims
             except AssertionError:
                 raise ValueError('Given value does not have the right dimension.')
-            for i in range(self.nbdims):
+            for i in range(self._nbdims):
                 try:
-                    assert state_value[i] >= self.ranges[i, 0] and state_value[i] <= self.ranges[i, 1]
+                    assert self.ranges[i, 0] <= state_value[i] <= self.ranges[i, 1]
                 except AssertionError:
                     raise InvalidRangeError()
         else:
             try:
-                assert state_value >= self.ranges[0, 0] and state_value <= self.ranges[0, 1]
+                assert self.ranges[0, 0] <= state_value <= self.ranges[0, 1]
             except AssertionError:
                 raise InvalidRangeError()
 
@@ -145,7 +165,10 @@ class ContinuousState(State):
         return self._ranges
 
     def get_state_value_range_at_dimension(self, dimension: int) -> np.ndarray:
-        return self._ranges[dimension]
+        if dimension < self._nbdims:
+            return self._ranges[dimension]
+        else:
+            raise ValueError(f"There are only {self._nbdims} dimensions!")
 
     @property
     def ranges(self) -> np.ndarray:
@@ -175,7 +198,7 @@ class Discrete2DCartesianState(DiscreteState):
         if initial_coordinate is None:
             initial_coordinate = [self._x_lowlim, self._y_lowlim]
         initial_value = (initial_coordinate[1] - self._y_lowlim) * self._countx + (initial_coordinate[0] - self._x_lowlim)
-        super().__init__(list(range(self._countx*self._county)), initial_values=initial_value)
+        super().__init__(list(range(self._countx*self._county)), initial_value=initial_value)
 
     def _encode_coordinates(self, x, y) -> int:
         return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
