@@ -200,6 +200,14 @@ class ContinuousState(State):
     def __hash__(self):
         return hash(tuple(self._state_value))
 
+    def __eq__(self, other: Self):
+        if self.nbdims != other.nbdims:
+            raise ValueError(f"The two states have two different dimensions. ({self.nbdims} vs. {other.nbdims})")
+        for i in range(self.nbdims):
+            if self.state_value[i] != other.state_value[i]:
+                return False
+        return True
+
 
 class Discrete2DCartesianState(DiscreteState):
     def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, initial_coordinate: List[int]=None):
