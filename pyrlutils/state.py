@@ -11,7 +11,6 @@ from .helpers.exceptions import InvalidRangeError
 
 @dataclass
 class State(ABC):
-    @abstractmethod
     @property
     def value(self):
         raise NotImplemented()
