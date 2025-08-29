@@ -1,5 +1,6 @@
 
 import numpy as np
+from nptyping import NDArray, Shape, Float
 
 
 def decay_schedule(
@@ -9,7 +10,7 @@ def decay_schedule(
         max_steps: int,
         log_start: int=-2,
         log_base: int=10
-):
+) -> NDArray[Shape["*"], Float]:
     decay_steps = int(max_steps*decay_ratio)
     rem_steps = max_steps - decay_steps
 
