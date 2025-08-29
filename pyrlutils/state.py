@@ -61,6 +61,12 @@ class DiscreteState(State):
     def state_index(self) -> int:
         return self._current_index
 
+    @state_index.setter
+    def state_index(self, new_index: int) -> None:
+        if new_index >= len(self._all_state_values):
+            raise ValueError(f"Invalid index {new_index}; it must be less than {len(self._all_state_values)}.")
+        self._current_index = new_index
+
     @property
     def state_value(self) -> DiscreteStateValueType:
         return self._all_state_values[self._current_index]

@@ -294,10 +294,11 @@ class Test2DMaze(unittest.TestCase):
             print('({}, {}): {}'.format(x, y, value))
 
         state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
+        assert isinstance(state, Discrete2DCartesianState)
 
         arrived_destination = False
         for _ in range(state.state_space_size*2):
-            action_value = policy.get_action_value(state)
+            action_value = policy.get_action_value(state.state_value)
             print('Action value: {}'.format(action_value))
             action = policy.get_action(state)
             state = action(state)
