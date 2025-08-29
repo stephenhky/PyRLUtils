@@ -119,7 +119,7 @@ class DiscreteStochasticPolicy(StochasticPolicy):
         return self._actions_dict[self.get_action_value(state.state_value)]
 
 
-class ContinuousStochasticPolicy(ABC, StochasticPolicy):
+class ContinuousStochasticPolicy(StochasticPolicy):
     @abstractmethod
     def get_probability(
             self,
