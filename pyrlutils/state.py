@@ -1,10 +1,16 @@
 
-from abc import ABC, abstractmethod
+import sys
+from abc import ABC
 from enum import Enum
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
 import numpy as np
+from nptyping import NDArray, Shape, Float
+if sys.version_info < (3, 11):
+    from typing_extensions import Self
+else:
+    from typing import Self
 
 from .helpers.exceptions import InvalidRangeError
 
@@ -67,13 +73,19 @@ class DiscreteState(State):
     def state_space_size(self):
         return len(self._all_state_values)
 
+    def __hash__(self):
+        return self._current_index
+
+    def __eq__(self, other: Self) -> bool:
+        return self._current_index == other._current_index
+
 
 class ContinuousState(State):
     def __init__(
             self,
             nbdims: int,
-            ranges: np.array,
-            init_value: Optional[Union[float, np.ndarray]] = None
+            ranges: Union[NDArray[Shape["2"], Float], NDArray[Shape["*, 2"], Float]],
+            init_value: Optional[Union[float, NDArray[Shape["*"], Float]]] = None
     ):
         super().__init__()
         self._nbdims = nbdims
@@ -138,7 +150,7 @@ class ContinuousState(State):
                     raise InvalidRangeError('Initialized value is out of range.')
             self._state_value = init_value
 
-    def set_state_value(self, state_value: Union[float, np.ndarray]):
+    def set_state_value(self, state_value: Union[float, NDArray[Shape["*"], Float]]):
         if self._nbdims > 1:
             try:
                 assert state_value.shape[0] == self._nbdims
@@ -157,20 +169,20 @@ class ContinuousState(State):
 
         self._state_value = state_value
 
-    def get_state_value(self) -> np.ndarray:
+    def get_state_value(self) -> NDArray[Shape["*"], Float]:
         return self._state_value
 
-    def get_state_value_ranges(self) -> np.ndarray:
+    def get_state_value_ranges(self) -> Union[NDArray[Shape["2"], Float], NDArray[Shape["*, 2"], Float]]:
         return self._ranges
 
-    def get_state_value_range_at_dimension(self, dimension: int) -> np.ndarray:
+    def get_state_value_range_at_dimension(self, dimension: int) -> NDArray[Shape["2"], Float]:
         if dimension < self._nbdims:
             return self._ranges[dimension]
         else:
             raise ValueError(f"There are only {self._nbdims} dimensions!")
 
     @property
-    def ranges(self) -> np.ndarray:
+    def ranges(self) -> Union[NDArray[Shape["2"], Float], NDArray[Shape["*, 2"], Float]]:
         return self.get_state_value_ranges()
 
     @property
@@ -184,6 +196,9 @@ class ContinuousState(State):
     @property
     def nbdims(self) -> int:
         return self._nbdims
+
+    def __hash__(self):
+        return hash(tuple(self._state_value))
 
 
 class Discrete2DCartesianState(DiscreteState):
