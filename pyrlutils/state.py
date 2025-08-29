@@ -50,7 +50,7 @@ class DiscreteState(State):
 
     def set_state_value(self, state_value: DiscreteStateValueType):
         if state_value in self._all_state_values:
-            self._current_index = self._get_state_value_from_index(state_value)
+            self._current_index = self._state_values_to_indices[state_value]
         else:
             raise ValueError('State value {} is invalid.'.format(state_value))
 
