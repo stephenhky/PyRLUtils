@@ -2,7 +2,6 @@
 import sys
 from abc import ABC
 from enum import Enum
-from dataclasses import dataclass
 from typing import Optional, Union
 
 import numpy as np
@@ -15,7 +14,6 @@ else:
 from .helpers.exceptions import InvalidRangeError
 
 
-@dataclass
 class State(ABC):
     @property
     def state_value(self):
