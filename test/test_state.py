@@ -50,6 +50,8 @@ class TestState(unittest.TestCase):
         state = Discrete2DCartesianState(-5, 5, -3, 3, [0, 0])
         assert state.encode_coordinates([-5, -3]) == 0
         assert state.decode_coordinates(0) == [-5, -3]
+        assert state.encode_coordinates([-4, -3]) == 1
+        assert state.encode_coordinates([-5, -2]) == 11
         assert state.encode_coordinates([0, 1]) == 40
         assert state.decode_coordinates(39) == [0, 0]
 
