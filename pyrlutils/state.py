@@ -241,4 +241,4 @@ class Discrete2DCartesianState(DiscreteState):
         return self._encode_coordinates(coordinates[0], coordinates[1])
 
     def decode_coordinates(self, hashcode) -> list[int]:
-        return [hashcode % self._countx, hashcode // self._countx]
+        return [hashcode % self._countx + self._x_lowlim, hashcode // self._countx + self._y_lowlim]
