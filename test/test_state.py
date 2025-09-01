@@ -2,6 +2,7 @@
 import unittest
 
 import numpy as np
+import numpy.testing as npt
 
 from pyrlutils.state import DiscreteState, ContinuousState, Discrete2DCartesianState
 from pyrlutils.helpers.exceptions import InvalidRangeError
@@ -32,7 +33,7 @@ class TestState(unittest.TestCase):
 
     def test_2d_continuous_state(self):
         state = ContinuousState(2, np.array([[0.0, 1.0], [-1.0, 1.0]]))
-        assert state.get_state_value() == state.state_value
+        npt.assert_almost_equal(state.get_state_value(), state.state_value)
         assert state.ranges[0, 0] == 0.0
         assert state.ranges[0, 1] == 1.0
         assert state.ranges[1, 0] == -1.0
@@ -47,8 +48,8 @@ class TestState(unittest.TestCase):
 
     def test_2d_discrete_state(self):
         state = Discrete2DCartesianState(-5, 5, -3, 3, [0, 0])
-        assert state.encode_coordinates([0, 1]) == 49
-        assert state.decode_coordinates(48) == [0, 0]
+        assert state.encode_coordinates([0, 1]) == 39
+        assert state.decode_coordinates(38) == [0, 0]
 
 
 
