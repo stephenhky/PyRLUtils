@@ -3,7 +3,7 @@ import unittest
 
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
 from pyrlutils.dp.valuefcns import OptimalPolicyOnValueFunctions
-from pyrlutils.state import Discrete2DCartesianState
+from pyrlutils.state import Discrete2DCartesianState, DiscreteState
 
 
 class Test2DMaze(unittest.TestCase):
@@ -294,10 +294,11 @@ class Test2DMaze(unittest.TestCase):
             print('({}, {}): {}'.format(x, y, value))
 
         state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
+        assert isinstance(state, DiscreteState)
 
         arrived_destination = False
         for _ in range(state.state_space_size*2):
-            action_value = policy.get_action_value(state)
+            action_value = policy.get_action_value(state.state_value)
             print('Action value: {}'.format(action_value))
             action = policy.get_action(state)
             state = action(state)
@@ -319,10 +320,11 @@ class Test2DMaze(unittest.TestCase):
             print('({}, {}): {}'.format(x, y, value))
 
         state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
+        assert isinstance(state, DiscreteState)
 
         arrived_destination = False
         for _ in range(state.state_space_size*2):
-            action_value = policy.get_action_value(state)
+            action_value = policy.get_action_value(state.state_value)
             print('Action value: {}'.format(action_value))
             action = policy.get_action(state)
             state = action(state)
