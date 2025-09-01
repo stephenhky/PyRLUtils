@@ -52,8 +52,11 @@ class TestState(unittest.TestCase):
         assert state.decode_coordinates(0) == [-5, -3]
         assert state.encode_coordinates([-4, -3]) == 1
         assert state.encode_coordinates([-5, -2]) == 11
-        assert state.encode_coordinates([0, 1]) == 40
-        assert state.decode_coordinates(39) == [0, 0]
+        assert state.encode_coordinates([-5, -1]) == 22
+        assert state.encode_coordinates([-5, 0]) == 33
+        assert state.encode_coordinates([-5, 1]) == 44
+        assert state.encode_coordinates([0, 1]) == 50
+        assert state.decode_coordinates(49) == [0, 0]
 
 
 
