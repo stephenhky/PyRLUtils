@@ -214,7 +214,14 @@ class ContinuousState(State):
 
 
 class Discrete2DCartesianState(DiscreteState):
-    def __init__(self, x_lowlim: int, x_hilim: int, y_lowlim: int, y_hilim: int, initial_coordinate: list[int]=None):
+    def __init__(
+            self,
+            x_lowlim: int,
+            x_hilim: int,
+            y_lowlim: int,
+            y_hilim: int,
+            initial_coordinate: list[int]=None
+    ):
         self._x_lowlim = x_lowlim
         self._x_hilim = x_hilim
         self._y_lowlim = y_lowlim

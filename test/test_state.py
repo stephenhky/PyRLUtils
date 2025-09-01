@@ -47,8 +47,8 @@ class TestState(unittest.TestCase):
 
     def test_2d_discrete_state(self):
         state = Discrete2DCartesianState(-5, 5, -3, 3, [0, 0])
-        assert state.encode_coordinates([0, 1]) == 13
-        assert state.decode_coordinates(12) == [0, 0]
+        assert state.encode_coordinates([0, 1]) == 49
+        assert state.decode_coordinates(48) == [0, 0]
 
 
 
