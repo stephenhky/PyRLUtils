@@ -27,7 +27,8 @@ class DiscreteState(State):
     def __init__(
             self,
             all_state_values: list[DiscreteStateValueType],
-            initial_value: Optional[DiscreteStateValueType] = None
+            initial_value: Optional[DiscreteStateValueType] = None,
+            terminals: Optional[dict[DiscreteStateValueType, bool]]=None
     ):
         super().__init__()
         self._all_state_values = all_state_values
@@ -39,6 +40,16 @@ class DiscreteState(State):
             self._current_index = self._state_values_to_indices[initial_value]
         else:
             self._current_index = 0
+        if terminals is None:
+            self._terminal_dict = {
+                state_value: False
+                for state_value in self._all_state_values
+            }
+        else:
+            self._terminal_dict = terminals.copy()
+            for state_value in self._all_state_values:
+                if self._terminal_dict.get(state_value) is None:
+                    self._terminal_dict[state_value] = False
 
     def _get_state_value_from_index(self, index: int) -> DiscreteStateValueType:
         return self._all_state_values[index]
@@ -46,7 +57,7 @@ class DiscreteState(State):
     def get_state_value(self) -> DiscreteStateValueType:
         return self._get_state_value_from_index(self._current_index)
 
-    def set_state_value(self, state_value: DiscreteStateValueType):
+    def set_state_value(self, state_value: DiscreteStateValueType) -> None:
         if state_value in self._all_state_values:
             self._current_index = self._state_values_to_indices[state_value]
         else:
@@ -76,6 +87,14 @@ class DiscreteState(State):
     @property
     def state_space_size(self):
         return len(self._all_state_values)
+
+    @property
+    def nb_state_values(self) -> int:
+        return len(self._all_state_values)
+
+    @property
+    def is_terminal(self) -> bool:
+        return self._terminal_dict[self._all_state_values[self._current_index]]
 
     def __hash__(self):
         return self._current_index
