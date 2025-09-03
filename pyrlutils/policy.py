@@ -42,12 +42,19 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
         self._state_to_action = {}
         self._actions_dict = actions_dict
 
-    def add_deterministic_rule(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType):
+    def add_deterministic_rule(
+            self,
+            state_value: DiscreteStateValueType,
+            action_value: DiscreteActionValueType
+    ) -> None:
         if state_value in self._state_to_action:
             warn('State value {} exists in rule; it will be replaced.'.format(state_value))
         self._state_to_action[state_value] = action_value
 
-    def get_action_value(self, state_value: DiscreteStateValueType) -> DiscreteActionValueType:
+    def get_action_value(
+            self,
+            state_value: DiscreteStateValueType
+    ) -> DiscreteActionValueType:
         return self._state_to_action.get(state_value)
 
     def get_action(self, state: DiscreteState) -> Action:
@@ -67,9 +74,15 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
         return True
 
 
+class DiscreteContinuousPolicy(DeterministicPolicy):
+    @abstractmethod
+    def get_action(self, state: State) -> Action:
+        raise NotImplemented()
+
+
 class StochasticPolicy(Policy):
     @abstractmethod
-    def get_probability(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType) -> float:
+    def get_probability(self, *args, **kwargs) -> float:
         raise NotImplemented()
 
     @property
@@ -101,7 +114,11 @@ class DiscreteStochasticPolicy(StochasticPolicy):
             for action_value, prob in zip(action_values, probs)
         }
 
-    def get_probability(self, state_value: DiscreteStateValueType, action_value: DiscreteActionValueType) -> float:
+    def get_probability(
+            self,
+            state_value: DiscreteStateValueType,
+            action_value: DiscreteActionValueType
+    ) -> float:
         if state_value not in self._state_to_action:
             return 0.0
         if action_value in self._state_to_action[state_value]:
@@ -131,3 +148,4 @@ class ContinuousStochasticPolicy(StochasticPolicy):
 
 
 DiscretePolicy = Union[DiscreteDeterminsticPolicy, DiscreteStochasticPolicy]
+ContinuousPolicy = Union[ContinuousStochasticPolicy]
