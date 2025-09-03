@@ -1,6 +1,7 @@
 
 import unittest
 
+from pyrlutils.state import DiscreteState
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
 
 class TestState(unittest.TestCase):
@@ -31,26 +32,36 @@ class TestState(unittest.TestCase):
 
         state, actions, ind_reward_fcn = trans_probs_factory.generate_mdp_objects()
 
+        assert isinstance(state, DiscreteState)
+
         assert len(state.get_all_possible_state_values()) == 3
         assert len(actions) == 2
 
         state = actions['left'](state)
         assert state.state_value == 0
+        assert state.is_terminal
         state = actions['right'](state)
         assert state.state_value == 0
+        assert state.is_terminal
 
         state.set_state_value(2)
         state = actions['left'](state)
         assert state.state_value == 2
+        assert state.is_terminal
         state = actions['right'](state)
         assert state.state_value == 2
+        assert state.is_terminal
 
         state.set_state_value(1)
+        assert not state.is_terminal
         state = actions['left'](state)
         assert state.state_value != 1
+        assert state.is_terminal
         state.set_state_value(1)
+        assert not state.is_terminal
         state = actions['right'](state)
         assert state.state_value != 1
+        assert state.is_terminal
 
         assert ind_reward_fcn(0, 'left', 0) == 0.0
         assert ind_reward_fcn(0, 'right', 0) == 0.0
