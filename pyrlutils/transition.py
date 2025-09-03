@@ -1,6 +1,7 @@
 
 from types import LambdaType, FunctionType
 from typing import Union
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -9,28 +10,12 @@ from .reward import IndividualRewardFunction
 from .action import Action, DiscreteActionValueType
 
 
+@dataclass
 class NextStateTuple:
-    def __init__(self, next_state_value: DiscreteStateValueType, probability: float, reward: float, terminal: bool):
-        self._next_state_value = next_state_value
-        self._probability = probability
-        self._reward = reward
-        self._terminal = terminal
-
-    @property
-    def next_state_value(self) -> DiscreteStateValueType:
-        return self._next_state_value
-
-    @property
-    def probability(self) -> float:
-        return self._probability
-
-    @property
-    def reward(self) -> float:
-        return self._reward
-
-    @property
-    def terminal(self) -> bool:
-        return self._terminal
+    next_state_value: DiscreteStateValueType
+    probability: float
+    reward: float
+    terminal: bool
 
 
 class TransitionProbabilityFactory:
@@ -119,9 +104,6 @@ class TransitionProbabilityFactory:
             return reward
 
         class ThisIndividualRewardFunction(IndividualRewardFunction):
-            def __init__(self):
-                super().__init__()
-
             def reward(
                     self,
                     state_value: DiscreteStateValueType,
@@ -160,9 +142,12 @@ class TransitionProbabilityFactory:
         for action_value in self._all_action_values:
             state_nexttuple = self._get_probs_for_eachstate(action_value)
             actions_dict[action_value] = Action(self._generate_action_function(state_nexttuple))
+            for next_tuples in state_nexttuple.values():
+                for next_tuple in next_tuples:
+                    state._terminal_dict[next_tuple.next_state_value] = next_tuple.terminal
 
         individual_reward_fcn = self._generate_individual_reward_function()
-
+        self._objects_generated = True
         return state, actions_dict, individual_reward_fcn
 
     @property
