@@ -28,7 +28,7 @@ class TransitionProbabilityFactory:
     def add_state_transitions(
             self,
             state_value: DiscreteStateValueType,
-            action_values_to_next_state: dict[DiscreteActionValueType, list[NextStateTuple]]
+            action_values_to_next_state: dict[DiscreteActionValueType, Union[list[NextStateTuple], dict]]
     ):
         if state_value not in self._all_state_values:
             self._all_state_values.append(state_value)
