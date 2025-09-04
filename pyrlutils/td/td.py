@@ -2,6 +2,7 @@
 from typing import Optional
 
 import numpy as np
+from nptyping import NDArray, Shape, Float
 
 from ..policy import DiscretePolicy
 from ..transition import TransitionProbabilityFactory
@@ -38,7 +39,7 @@ class TDLearner:
             raise ValueError("Initial state index must be between 0 and {}".format(len(self._state_names)))
         self._init_state_index = initial_state_index
 
-    def learn(self, episodes: int):
+    def learn(self, episodes: int) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
         V = np.zeros(self.nb_states)
         V_track = np.zeros((episodes, self.nb_states))
         alphas = decay_schedule(
@@ -49,23 +50,23 @@ class TDLearner:
             self._state.set_state_value(self._init_state_index)
             done = False
             while not done:
-                this_state_index = self._state.state_index
+                old_state_index = self._state.state_index
+                old_state_value = self._state.state_value
                 action_value = self._policy.get_action_value(self._state)
                 action_func = self._actions_dict[action_value]
                 self._state = action_func(self._state)
                 new_state_index = self._state.state_index
-                reward = self._indrewardfcn(
-                    self._state._get_state_value_from_index(this_state_index),
-                    action_value,
-                    self._state._get_state_value_from_index(new_state_index)
-                )
+                new_state_value = self._state.state_value
+                reward = self._indrewardfcn(old_state_value, action_value, new_state_value)
                 done = self._state.is_terminal
 
                 td_target = reward + self._gamma * V[new_state_index] * (not done)
-                td_error = td_target - V[this_state_index]
-                V[this_state_index] = V[this_state_index] + alphas[i] * td_error
+                td_error = td_target - V[old_state_index]
+                V[old_state_index] = V[old_state_index] + alphas[i] * td_error
 
             V_track[i, :] = V
+
+        return V, V_track
 
     @property
     def nb_states(self) -> int:
