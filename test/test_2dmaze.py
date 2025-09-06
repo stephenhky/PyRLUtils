@@ -284,7 +284,11 @@ class Test2DMaze(unittest.TestCase):
         )
 
         self.transprobfactory = transprobfactory
-        self.maze_state, self.actions_dict, self.individual_function = self.transprobfactory.generate_mdp_objects()
+        self.maze_state = maze_state
+
+        # Note: the 2D discrete state is confusing when dealing with terminality
+        maze_state, _, _ = self.transprobfactory.generate_mdp_objects()
+        self.maze_state._terminal_dict = maze_state._terminal_dict
 
     def test_terminal(self):
         print(self.maze_state._terminal_dict)
