@@ -287,6 +287,7 @@ class Test2DMaze(unittest.TestCase):
         self.maze_state = maze_state
 
     def test_terminal(self):
+        print(self.maze_state._terminal_dict)
         for i, j in product(
                 range(self.maze_state.x_lowlim, self.maze_state.x_hilim + 1),
                 range(self.maze_state.y_lowlim, self.maze_state.y_hilim + 1)
