@@ -293,9 +293,9 @@ class Test2DMaze(unittest.TestCase):
         ):
             self.maze_state.set_state_value(self.maze_state.encode_coordinates([i, j]))
             if (i == self.maze_state.x_hilim) and (j == self.maze_state.y_hilim):
-                assert not self.maze_state.is_terminal
-            else:
                 assert self.maze_state.is_terminal
+            else:
+                assert not self.maze_state.is_terminal
 
     def test_policy_iteration(self):
         policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
