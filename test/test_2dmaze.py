@@ -284,7 +284,7 @@ class Test2DMaze(unittest.TestCase):
         )
 
         self.transprobfactory = transprobfactory
-        self.maze_state = maze_state
+        self.maze_state, self.actions_dict, self.individual_function = self.transprobfactory.generate_mdp_objects()
 
     def test_terminal(self):
         print(self.maze_state._terminal_dict)
