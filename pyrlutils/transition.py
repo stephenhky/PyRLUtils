@@ -145,6 +145,8 @@ class TransitionProbabilityFactory:
             for next_tuples in state_nexttuple.values():
                 for next_tuple in next_tuples:
                     state._terminal_dict[next_tuple.next_state_value] = next_tuple.terminal
+                    print(f"next_state: {next_tuple.next_state_value}; terminal: {next_tuple.terminal}")
+                    print(state._terminal_dict)
 
         individual_reward_fcn = self._generate_individual_reward_function()
         self._objects_generated = True
