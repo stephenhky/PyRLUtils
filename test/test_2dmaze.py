@@ -293,6 +293,7 @@ class Test2DMaze(unittest.TestCase):
                 range(self.maze_state.y_lowlim, self.maze_state.y_hilim + 1)
         ):
             self.maze_state.set_state_value(self.maze_state.encode_coordinates([i, j]))
+            print(f"i: {i}, j: {j}; encoded: {self.maze_state.encode_coordinates([i, j])}; terminal: {self.maze_state.is_terminal}")
             if (i == self.maze_state.x_hilim) and (j == self.maze_state.y_hilim):
                 assert self.maze_state.is_terminal
             else:

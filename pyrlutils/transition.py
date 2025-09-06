@@ -143,10 +143,8 @@ class TransitionProbabilityFactory:
             state_nexttuple = self._get_probs_for_eachstate(action_value)
             actions_dict[action_value] = Action(self._generate_action_function(state_nexttuple))
             for next_tuples in state_nexttuple.values():
-                print(next_tuples)
                 for next_tuple in next_tuples:
                     state._terminal_dict[next_tuple.next_state_value] = next_tuple.terminal
-                    print(f"next_state: {next_tuple.next_state_value}; terminal: {next_tuple.terminal}")
                     print(state._terminal_dict)
 
         individual_reward_fcn = self._generate_individual_reward_function()
