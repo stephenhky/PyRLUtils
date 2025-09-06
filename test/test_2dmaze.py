@@ -1,4 +1,5 @@
 
+from itertools import product
 import unittest
 
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
@@ -284,6 +285,17 @@ class Test2DMaze(unittest.TestCase):
 
         self.transprobfactory = transprobfactory
         self.maze_state = maze_state
+
+    def test_terminal(self):
+        for i, j in product(
+                range(self.maze_state.x_lowlim, self.maze_state.x_hilim + 1),
+                range(self.maze_state.y_lowlim, self.maze_state.y_hilim + 1)
+        ):
+            self.maze_state.set_state_value(self.maze_state.encode_coordinates([i, j]))
+            if (i == self.maze_state.x_hilim) and (j == self.maze_state.y_hilim):
+                assert not self.maze_state.is_terminal
+            else:
+                assert self.maze_state.is_terminal
 
     def test_policy_iteration(self):
         policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)

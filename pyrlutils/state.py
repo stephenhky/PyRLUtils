@@ -261,3 +261,19 @@ class Discrete2DCartesianState(DiscreteState):
 
     def decode_coordinates(self, hashcode) -> list[int]:
         return [hashcode % self._countx + self._x_lowlim, hashcode // self._countx + self._y_lowlim]
+
+    @property
+    def x_lowlim(self) -> int:
+        return self._x_lowlim
+
+    @property
+    def x_hilim(self) -> int:
+        return self._x_hilim
+
+    @property
+    def y_lowlim(self) -> int:
+        return self._y_lowlim
+
+    @property
+    def y_hilim(self) -> int:
+        return self._y_hilim
