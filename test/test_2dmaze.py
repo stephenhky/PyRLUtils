@@ -285,10 +285,7 @@ class Test2DMaze(unittest.TestCase):
 
         self.transprobfactory = transprobfactory
         self.maze_state = maze_state
-
-        # Note: the 2D discrete state is confusing when dealing with terminality
-        maze_state, _, _ = self.transprobfactory.generate_mdp_objects()
-        self.maze_state._terminal_dict = maze_state._terminal_dict
+        self.maze_state.set_terminal_given_coordinates([5, 4], True)
 
     def test_terminal(self):
         print(self.maze_state._terminal_dict)
@@ -300,8 +297,10 @@ class Test2DMaze(unittest.TestCase):
             print(f"i: {i}, j: {j}; encoded: {self.maze_state.encode_coordinates([i, j])}; terminal: {self.maze_state.is_terminal}")
             if (i == self.maze_state.x_hilim) and (j == self.maze_state.y_hilim):
                 assert self.maze_state.is_terminal
+                assert self.maze_state.get_whether_terminal_given_coordinates([i, j])
             else:
                 assert not self.maze_state.is_terminal
+                assert not self.maze_state.get_whether_terminal_given_coordinates([i, j])
 
     def test_policy_iteration(self):
         policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)

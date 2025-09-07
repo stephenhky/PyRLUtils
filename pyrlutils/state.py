@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Optional, Union
 
 import numpy as np
-from nptyping import NDArray, Shape, Float
+from nptyping import NDArray, Shape, Float, Int
 if sys.version_info < (3, 11):
     from typing_extensions import Self
 else:
@@ -239,7 +239,8 @@ class Discrete2DCartesianState(DiscreteState):
             x_hilim: int,
             y_lowlim: int,
             y_hilim: int,
-            initial_coordinate: list[int]=None
+            initial_coordinate: list[int]=None,
+            terminals: Optional[dict[DiscreteStateValueType, bool]] = None
     ):
         self._x_lowlim = x_lowlim
         self._x_hilim = x_hilim
@@ -250,17 +251,37 @@ class Discrete2DCartesianState(DiscreteState):
         if initial_coordinate is None:
             initial_coordinate = [self._x_lowlim, self._y_lowlim]
         initial_value = (initial_coordinate[1] - self._y_lowlim) * self._countx + (initial_coordinate[0] - self._x_lowlim)
-        super().__init__(list(range(self._countx*self._county)), initial_value=initial_value)
+        super().__init__(list(range(self._countx*self._county)), initial_value=initial_value, terminals=terminals)
 
     def _encode_coordinates(self, x, y) -> int:
         return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
 
-    def encode_coordinates(self, coordinates: list[int]) -> int:
-        assert len(coordinates) == 2
+    def encode_coordinates(self, coordinates: Union[list[int], NDArray[Shape["2"], Int]]) -> int:
+        if isinstance(coordinates, list):
+            assert len(coordinates) == 2
         return self._encode_coordinates(coordinates[0], coordinates[1])
 
     def decode_coordinates(self, hashcode) -> list[int]:
         return [hashcode % self._countx + self._x_lowlim, hashcode // self._countx + self._y_lowlim]
+
+    def get_whether_terminal_given_coordinates(
+            self,
+            coordinates: Union[list[int], NDArray[Shape["2"], Int]]
+    ) -> bool:
+        if isinstance(coordinates, list):
+            assert len(coordinates) == 2
+        hashcode = self._encode_coordinates(coordinates[0], coordinates[1])
+        return self._terminal_dict.get(hashcode, False)
+
+    def set_terminal_given_coordinates(
+            self,
+            coordinates: Union[list[int], NDArray[Shape["2"], Int]],
+            terminal_value: bool
+    ) -> None:
+        if isinstance(coordinates, list):
+            assert len(coordinates) == 2
+        hashcode = self._encode_coordinates(coordinates[0], coordinates[1])
+        self._terminal_dict[hashcode] = terminal_value
 
     @property
     def x_lowlim(self) -> int:
