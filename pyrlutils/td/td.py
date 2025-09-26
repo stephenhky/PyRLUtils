@@ -13,11 +13,11 @@ class SingleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
         V = np.zeros(self.nb_states)
         V_track = np.zeros((episodes, self.nb_states))
         alphas = decay_schedule(
-            self._init_alpha, self._min_alpha, self._alpha_decay_ratio, episodes
+            self.init_alpha, self.min_alpha, self.alpha_decay_ratio, episodes
         )
 
         for i in range(episodes):
-            self._state.set_state_value(self._init_state_index)
+            self._state.set_state_value(self.initial_state_index)
             done = False
             while not done:
                 old_state_index = self._state.state_index
@@ -30,7 +30,7 @@ class SingleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
                 reward = self._indrewardfcn(old_state_value, action_value, new_state_value)
                 done = self._state.is_terminal
 
-                td_target = reward + self._gamma * V[new_state_index] * (not done)
+                td_target = reward + self.gamma * V[new_state_index] * (not done)
                 td_error = td_target - V[old_state_index]
                 V[old_state_index] = V[old_state_index] + alphas[i] * td_error
 
