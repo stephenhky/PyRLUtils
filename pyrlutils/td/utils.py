@@ -1,5 +1,5 @@
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Optional
 
 import numpy as np
@@ -58,6 +58,9 @@ class AbstractTemporalDifferenceLearner(ABC):
             raise ValueError("Initial state index must be between 0 and {}".format(len(self._state_names)))
         self._init_state_index = initial_state_index
 
+    @abstractmethod
+    def learn(self, *args, **kwargs) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+        raise NotImplementedError()
 
     @property
     def nb_states(self) -> int:

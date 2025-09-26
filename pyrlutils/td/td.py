@@ -5,8 +5,11 @@ from nptyping import NDArray, Shape, Float
 from .utils import decay_schedule, AbstractTemporalDifferenceLearner
 
 
-class TemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
-    def learn(self, episodes: int) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+class SingleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
+    def learn(
+            self,
+            episodes: int
+    ) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
         V = np.zeros(self.nb_states)
         V_track = np.zeros((episodes, self.nb_states))
         alphas = decay_schedule(
@@ -34,3 +37,12 @@ class TemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
             V_track[i, :] = V
 
         return V, V_track
+
+
+class MultipleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
+    def learn(
+            self,
+            episodes: int,
+            n_steps: int=3
+    ) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+        pass
