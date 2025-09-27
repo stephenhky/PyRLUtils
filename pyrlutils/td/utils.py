@@ -1,6 +1,7 @@
 
 from abc import ABC, abstractmethod
 from typing import Optional
+from dataclasses import dataclass
 
 import numpy as np
 from nptyping import NDArray, Shape, Float
@@ -109,3 +110,11 @@ class AbstractTemporalDifferenceLearner(ABC):
     @initial_state_index.setter
     def initial_state_index(self, val: int):
         self._init_state_index = val
+
+
+@dataclass
+class TimeDifferencePathElements:
+    this_state_index: int
+    reward: float
+    next_state_index: int
+    done: bool
