@@ -1,18 +1,23 @@
 
 import random
 from copy import copy
-from typing import Tuple, Dict
 from itertools import product
+from typing import Annotated
 
 import numpy as np
+from numpy.typing import NDArray
 
-from .state import DiscreteStateValueType
-from .transition import TransitionProbabilityFactory
-from .policy import DiscreteDeterminsticPolicy
+from ..state import DiscreteStateValueType
+from ..transition import TransitionProbabilityFactory
+from ..policy import DiscreteDeterminsticPolicy
 
 
 class OptimalPolicyOnValueFunctions:
-    def __init__(self, discount_factor: float, transprobfac: TransitionProbabilityFactory):
+    def __init__(
+            self,
+            discount_factor: float,
+            transprobfac: TransitionProbabilityFactory
+    ):
         try:
             assert 0. <= discount_factor <= 1.
         except AssertionError:
@@ -31,7 +36,7 @@ class OptimalPolicyOnValueFunctions:
         self._theta = 1e-10
         self._policy_evaluation_maxiter = 10000
 
-    def _policy_evaluation(self, policy: DiscreteDeterminsticPolicy) -> np.ndarray:
+    def _policy_evaluation(self, policy: DiscreteDeterminsticPolicy) -> Annotated[NDArray[np.float64], "1D Array"]:
         prev_V = np.zeros(len(self._states_to_indices))
 
         for _ in range(self._policy_evaluation_maxiter):
@@ -55,7 +60,7 @@ class OptimalPolicyOnValueFunctions:
 
         return V
 
-    def _policy_improvement(self, V: np.ndarray) -> DiscreteDeterminsticPolicy:
+    def _policy_improvement(self, V: Annotated[NDArray[np.float64], "1D Array"]) -> DiscreteDeterminsticPolicy:
         Q = np.zeros((len(self._states_to_indices), len(self._actions_to_indices)))
 
         for state_value in self._state_names:
@@ -78,7 +83,7 @@ class OptimalPolicyOnValueFunctions:
             optimal_policy.add_deterministic_rule(state_value, action_value)
         return optimal_policy
 
-    def _policy_iteration(self) -> Tuple[np.ndarray, DiscreteDeterminsticPolicy]:
+    def _policy_iteration(self) -> tuple[Annotated[NDArray[np.float64], "1D Array"], DiscreteDeterminsticPolicy]:
         policy = DiscreteDeterminsticPolicy(self._actions_dict)
         for state_value in self._state_names:
             policy.add_deterministic_rule(state_value, random.choice(self._action_names))
@@ -97,7 +102,7 @@ class OptimalPolicyOnValueFunctions:
         return V, policy
 
 
-    def _value_iteration(self) -> Tuple[np.ndarray, DiscreteDeterminsticPolicy]:
+    def _value_iteration(self) -> tuple[Annotated[NDArray[np.float64], "1D Array"], DiscreteDeterminsticPolicy]:
         V = np.zeros(len(self._state_names))
 
         for _ in range(self._policy_evaluation_maxiter):
@@ -127,7 +132,7 @@ class OptimalPolicyOnValueFunctions:
 
         return V, policy
 
-    def policy_iteration(self) -> Tuple[Dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
+    def policy_iteration(self) -> tuple[dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
         V, policy = self._policy_iteration()
         state_values_dict = {
             self._state_names[i]: V[i]
@@ -135,7 +140,7 @@ class OptimalPolicyOnValueFunctions:
         }
         return state_values_dict, policy
 
-    def value_iteration(self) -> Tuple[Dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
+    def value_iteration(self) -> tuple[dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
         V, policy = self._value_iteration()
         state_values_dict = {
             self._state_names[i]: V[i]

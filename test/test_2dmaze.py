@@ -1,9 +1,10 @@
 
+from itertools import product
 import unittest
 
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
-from pyrlutils.valuefcns import OptimalPolicyOnValueFunctions
-from pyrlutils.state import Discrete2DCartesianState
+from pyrlutils.dp.valuefcns import OptimalPolicyOnValueFunctions
+from pyrlutils.state import Discrete2DCartesianState, DiscreteState
 
 
 class Test2DMaze(unittest.TestCase):
@@ -284,6 +285,22 @@ class Test2DMaze(unittest.TestCase):
 
         self.transprobfactory = transprobfactory
         self.maze_state = maze_state
+        self.maze_state.set_terminal_given_coordinates([5, 4], True)
+
+    def test_terminal(self):
+        print(self.maze_state._terminal_dict)
+        for i, j in product(
+                range(self.maze_state.x_lowlim, self.maze_state.x_hilim + 1),
+                range(self.maze_state.y_lowlim, self.maze_state.y_hilim + 1)
+        ):
+            self.maze_state.set_state_value(self.maze_state.encode_coordinates([i, j]))
+            print(f"i: {i}, j: {j}; encoded: {self.maze_state.encode_coordinates([i, j])}; terminal: {self.maze_state.is_terminal}")
+            if (i == self.maze_state.x_hilim) and (j == self.maze_state.y_hilim):
+                assert self.maze_state.is_terminal
+                assert self.maze_state.get_whether_terminal_given_coordinates([i, j])
+            else:
+                assert not self.maze_state.is_terminal
+                assert not self.maze_state.get_whether_terminal_given_coordinates([i, j])
 
     def test_policy_iteration(self):
         policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
@@ -294,10 +311,11 @@ class Test2DMaze(unittest.TestCase):
             print('({}, {}): {}'.format(x, y, value))
 
         state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
+        assert isinstance(state, DiscreteState)
 
         arrived_destination = False
         for _ in range(state.state_space_size*2):
-            action_value = policy.get_action_value(state)
+            action_value = policy.get_action_value(state.state_value)
             print('Action value: {}'.format(action_value))
             action = policy.get_action(state)
             state = action(state)
@@ -319,10 +337,11 @@ class Test2DMaze(unittest.TestCase):
             print('({}, {}): {}'.format(x, y, value))
 
         state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
+        assert isinstance(state, DiscreteState)
 
         arrived_destination = False
         for _ in range(state.state_space_size*2):
-            action_value = policy.get_action_value(state)
+            action_value = policy.get_action_value(state.state_value)
             print('Action value: {}'.format(action_value))
             action = policy.get_action(state)
             state = action(state)
