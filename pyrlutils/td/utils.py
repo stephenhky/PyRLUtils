@@ -17,7 +17,7 @@ def decay_schedule(
         max_steps: int,
         log_start: int=-2,
         log_base: int=10
-) -> Annotated[NDArray[np.float_], "1D Array"]:
+) -> Annotated[NDArray[np.float64], "1D Array"]:
     decay_steps = int(max_steps*decay_ratio)
     rem_steps = max_steps - decay_steps
 
@@ -59,7 +59,7 @@ class AbstractTemporalDifferenceLearner(ABC):
         self._init_state_index = initial_state_index
 
     @abstractmethod
-    def learn(self, *args, **kwargs) -> tuple[Annotated[NDArray[np.float_], "1D Array"], Annotated[NDArray[np.float_], "2D Array"]]:
+    def learn(self, *args, **kwargs) -> tuple[Annotated[NDArray[np.float64], "1D Array"], Annotated[NDArray[np.float64], "2D Array"]]:
         raise NotImplementedError()
 
     @property

@@ -107,8 +107,8 @@ class ContinuousState(State):
     def __init__(
             self,
             nbdims: int,
-            ranges: Union[Annotated[NDArray[np.float_], Literal["2"]], Annotated[NDArray[np.float_], Literal["*", "2"]]],
-            init_value: Optional[Union[float, Annotated[NDArray[np.float_], "1D Array"]]] = None
+            ranges: Union[Annotated[NDArray[np.float64], Literal["2"]], Annotated[NDArray[np.float64], Literal["*", "2"]]],
+            init_value: Optional[Union[float, Annotated[NDArray[np.float64], "1D Array"]]] = None
     ):
         super().__init__()
         self._nbdims = nbdims
@@ -190,7 +190,7 @@ class ContinuousState(State):
                     raise InvalidRangeError('Initialized value is out of range.')
             self._state_value = init_value
 
-    def set_state_value(self, state_value: Union[float, Annotated[NDArray[np.float_], "1D Array"]]):
+    def set_state_value(self, state_value: Union[float, Annotated[NDArray[np.float64], "1D Array"]]):
         if self._nbdims > 1:
             try:
                 assert state_value.shape[0] == self._nbdims
@@ -209,24 +209,24 @@ class ContinuousState(State):
 
         self._state_value = state_value
 
-    def get_state_value(self) -> Annotated[NDArray[np.float_], "1D Array"]:
+    def get_state_value(self) -> Annotated[NDArray[np.float64], "1D Array"]:
         return self._state_value
 
-    def get_state_value_ranges(self) -> Union[Annotated[NDArray[np.float_], Literal["2"]], Annotated[NDArray[np.float_], Literal["*", "2"]]]:
+    def get_state_value_ranges(self) -> Union[Annotated[NDArray[np.float64], Literal["2"]], Annotated[NDArray[np.float64], Literal["*", "2"]]]:
         return self._ranges
 
-    def get_state_value_range_at_dimension(self, dimension: int) -> Annotated[NDArray[np.float_], Literal["2"]]:
+    def get_state_value_range_at_dimension(self, dimension: int) -> Annotated[NDArray[np.float64], Literal["2"]]:
         if dimension < self._nbdims:
             return self._ranges[dimension]
         else:
             raise ValueError(f"There are only {self._nbdims} dimensions!")
 
     @property
-    def ranges(self) -> Union[Annotated[NDArray[np.float_], Literal["2"]], Annotated[NDArray[np.float_], Literal["*", "2"]]]:
+    def ranges(self) -> Union[Annotated[NDArray[np.float64], Literal["2"]], Annotated[NDArray[np.float64], Literal["*", "2"]]]:
         return self.get_state_value_ranges()
 
     @property
-    def state_value(self) -> Union[float, NDArray[np.float_]]:
+    def state_value(self) -> Union[float, NDArray[np.float64]]:
         return self.get_state_value()
 
     @state_value.setter
@@ -273,7 +273,7 @@ class Discrete2DCartesianState(DiscreteState):
     def _encode_coordinates(self, x, y) -> int:
         return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
 
-    def encode_coordinates(self, coordinates: Union[list[int], Annotated[NDArray[np.int_], Literal["2"]]]) -> int:
+    def encode_coordinates(self, coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]]) -> int:
         if isinstance(coordinates, list):
             assert len(coordinates) == 2
         return self._encode_coordinates(coordinates[0], coordinates[1])
@@ -283,7 +283,7 @@ class Discrete2DCartesianState(DiscreteState):
 
     def get_whether_terminal_given_coordinates(
             self,
-            coordinates: Union[list[int], Annotated[NDArray[np.int_], Literal["2"]]]
+            coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]]
     ) -> bool:
         if isinstance(coordinates, list):
             assert len(coordinates) == 2
@@ -292,7 +292,7 @@ class Discrete2DCartesianState(DiscreteState):
 
     def set_terminal_given_coordinates(
             self,
-            coordinates: Union[list[int], Annotated[NDArray[np.int_], Literal["2"]]],
+            coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]],
             terminal_value: bool
     ) -> None:
         if isinstance(coordinates, list):
