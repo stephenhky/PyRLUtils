@@ -2,9 +2,10 @@
 import random
 from copy import copy
 from itertools import product
+from typing import Annotated
 
 import numpy as np
-from nptyping import NDArray, Shape, Float
+from numpy.typing import NDArray
 
 from ..state import DiscreteStateValueType
 from ..transition import TransitionProbabilityFactory
@@ -35,7 +36,7 @@ class OptimalPolicyOnValueFunctions:
         self._theta = 1e-10
         self._policy_evaluation_maxiter = 10000
 
-    def _policy_evaluation(self, policy: DiscreteDeterminsticPolicy) -> NDArray[Shape["*"], Float]:
+    def _policy_evaluation(self, policy: DiscreteDeterminsticPolicy) -> Annotated[NDArray[np.float_], "1D Array"]:
         prev_V = np.zeros(len(self._states_to_indices))
 
         for _ in range(self._policy_evaluation_maxiter):
@@ -59,7 +60,7 @@ class OptimalPolicyOnValueFunctions:
 
         return V
 
-    def _policy_improvement(self, V: NDArray[Shape["*"], Float]) -> DiscreteDeterminsticPolicy:
+    def _policy_improvement(self, V: Annotated[NDArray[np.float_], "1D Array"]) -> DiscreteDeterminsticPolicy:
         Q = np.zeros((len(self._states_to_indices), len(self._actions_to_indices)))
 
         for state_value in self._state_names:
@@ -82,7 +83,7 @@ class OptimalPolicyOnValueFunctions:
             optimal_policy.add_deterministic_rule(state_value, action_value)
         return optimal_policy
 
-    def _policy_iteration(self) -> tuple[NDArray[Shape["*"], Float], DiscreteDeterminsticPolicy]:
+    def _policy_iteration(self) -> tuple[Annotated[NDArray[np.float_], "1D Array"], DiscreteDeterminsticPolicy]:
         policy = DiscreteDeterminsticPolicy(self._actions_dict)
         for state_value in self._state_names:
             policy.add_deterministic_rule(state_value, random.choice(self._action_names))
@@ -101,7 +102,7 @@ class OptimalPolicyOnValueFunctions:
         return V, policy
 
 
-    def _value_iteration(self) -> tuple[NDArray[Shape["*"], Float], DiscreteDeterminsticPolicy]:
+    def _value_iteration(self) -> tuple[Annotated[NDArray[np.float_], "1D Array"], DiscreteDeterminsticPolicy]:
         V = np.zeros(len(self._state_names))
 
         for _ in range(self._policy_evaluation_maxiter):

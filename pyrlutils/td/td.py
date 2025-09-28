@@ -1,6 +1,8 @@
 
+from typing import Annotated
+
 import numpy as np
-from nptyping import NDArray, Shape, Float
+from numpy.typing import NDArray
 
 from .utils import decay_schedule, AbstractTemporalDifferenceLearner, TimeDifferencePathElements
 
@@ -9,7 +11,7 @@ class SingleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
     def learn(
             self,
             episodes: int
-    ) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+    ) -> tuple[Annotated[NDArray[np.float_], "1D Array"], Annotated[NDArray[np.float_], "2D Array"]]:
         V = np.zeros(self.nb_states)
         V_track = np.zeros((episodes, self.nb_states))
         alphas = decay_schedule(
@@ -44,7 +46,7 @@ class MultipleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
             self,
             episodes: int,
             n_steps: int=3
-    ) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+    ) -> tuple[Annotated[NDArray[np.float_], "1D Array"], Annotated[NDArray[np.float_], "2D Array"]]:
         V = np.zeros(self.nb_states)
         V_track = np.zeros((episodes, self.nb_states))
         alphas = decay_schedule(

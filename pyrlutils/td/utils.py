@@ -1,11 +1,10 @@
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Annotated
 from dataclasses import dataclass
 
 import numpy as np
-from nptyping import NDArray, Shape, Float
-
+from numpy.typing import NDArray
 
 from ..policy import DiscretePolicy
 from ..transition import TransitionProbabilityFactory
@@ -18,7 +17,7 @@ def decay_schedule(
         max_steps: int,
         log_start: int=-2,
         log_base: int=10
-) -> NDArray[Shape["*"], Float]:
+) -> Annotated[NDArray[np.float_], "1D Array"]:
     decay_steps = int(max_steps*decay_ratio)
     rem_steps = max_steps - decay_steps
 
@@ -60,7 +59,7 @@ class AbstractTemporalDifferenceLearner(ABC):
         self._init_state_index = initial_state_index
 
     @abstractmethod
-    def learn(self, *args, **kwargs) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+    def learn(self, *args, **kwargs) -> tuple[Annotated[NDArray[np.float_], "1D Array"], Annotated[NDArray[np.float_], "2D Array"]]:
         raise NotImplementedError()
 
     @property

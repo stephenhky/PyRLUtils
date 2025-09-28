@@ -1,10 +1,10 @@
 
 from abc import ABC, abstractmethod
-from typing import Union
+from typing import Union, Annotated
 from warnings import warn
 
 import numpy as np
-from nptyping import NDArray, Shape, Float
+from numpy.typing import NDArray
 
 from .state import State, DiscreteState, DiscreteStateValueType
 from .action import Action, DiscreteActionValueType
@@ -99,7 +99,7 @@ class DiscreteStochasticPolicy(StochasticPolicy):
             self,
             state_value: DiscreteStateValueType,
             action_values: list[DiscreteActionValueType],
-            probs: Union[list[float], NDArray[Shape["*"], Float]] = None
+            probs: Union[list[float], Annotated[NDArray[np.float_], "1D Array"]] = None
     ):
         if probs is not None:
             assert len(action_values) == len(probs)
@@ -140,9 +140,9 @@ class ContinuousStochasticPolicy(StochasticPolicy):
     @abstractmethod
     def get_probability(
             self,
-            state_value: Union[float, NDArray[Shape["*"], Float]],
+            state_value: Union[float, Annotated[NDArray[np.float_], "1D Array"]],
             action_value: DiscreteActionValueType,
-            value: Union[float, NDArray[Shape["*"], Float]]
+            value: Union[float, Annotated[NDArray[np.float_], "1D Array"]]
     ) -> float:
         raise NotImplemented()
 
