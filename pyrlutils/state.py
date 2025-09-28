@@ -114,7 +114,7 @@ class ContinuousState(State):
         self._nbdims = nbdims
 
         try:
-            assert isinstance(range, np.ndarray)
+            assert isinstance(ranges, np.ndarray)
         except AssertionError:
             raise TypeError('Range must be a numpy array.')
 
