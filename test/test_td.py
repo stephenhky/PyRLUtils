@@ -29,23 +29,35 @@ class TestTD(unittest.TestCase):
         tdlearner = SingleStepTemporalDifferenceLearner(self.transprobfac, policy=self.policy)
         V, V_track = tdlearner.learn(5)
 
-        assert V.ndim == 1
-        assert V.shape[0] == 16
+        # assert V.ndim == 1
+        # assert V.shape[0] == 16
+        #
+        # assert V_track.ndim == 2
+        # assert V_track.shape[0] == 5
+        # assert V_track.shape[1] == 16
+        assert V.tensor_dimensions == 1
+        assert V.dimension_sizes[0] == 16
 
-        assert V_track.ndim == 2
-        assert V_track.shape[0] == 5
-        assert V_track.shape[1] == 16
+        assert V_track.tensor_dimensions == 2
+        assert V_track.dimension_sizes[0] == 5
+        assert V_track.dimension_sizes[1] == 16
 
     def test_multiplestep_td_learn(self):
         tdlearner = MultipleStepTemporalDifferenceLearner(self.transprobfac, policy=self.policy)
         V, V_track = tdlearner.learn(5)
 
-        assert V.ndim == 1
-        assert V.shape[0] == 16
+        # assert V.ndim == 1
+        # assert V.shape[0] == 16
+        #
+        # assert V_track.ndim == 2
+        # assert V_track.shape[0] == 5
+        # assert V_track.shape[1] == 16
+        assert V.tensor_dimensions == 1
+        assert V.dimension_sizes[0] == 16
 
-        assert V_track.ndim == 2
-        assert V_track.shape[0] == 5
-        assert V_track.shape[1] == 16
+        assert V_track.tensor_dimensions == 2
+        assert V_track.dimension_sizes[0] == 5
+        assert V_track.dimension_sizes[1] == 16
 
 
 if __name__ == '__main__':
