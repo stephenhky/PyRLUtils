@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
 
+from ..state import DiscreteStateValueType
 from ..policy import DiscretePolicy
 from ..transition import TransitionProbabilityFactory
 
@@ -55,7 +56,7 @@ class AbstractTemporalDifferenceLearner(ABC):
         try:
             assert 0 <= initial_state_index < self._state.nb_state_values
         except AssertionError:
-            raise ValueError("Initial state index must be between 0 and {}".format(len(self._state_names)))
+            raise ValueError(f"Initial state index must be between 0 and {self._state.nb_state_values}")
         self._init_state_index = initial_state_index
 
     @abstractmethod
@@ -113,7 +114,7 @@ class AbstractTemporalDifferenceLearner(ABC):
 
 @dataclass
 class TimeDifferencePathElements:
-    this_state_index: int
+    this_state_value: DiscreteStateValueType
     reward: float
-    next_state_index: int
+    next_state_value: DiscreteStateValueType
     done: bool
