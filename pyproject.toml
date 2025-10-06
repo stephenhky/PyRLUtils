@@ -25,7 +25,7 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
 ]
-dependencies = ["numpy", "npdict", "typing-extensions"]
+dependencies = ["numpy", "npdict>=0.0.6", "typing-extensions"]
 
 [project.urls]
 Repository = "https://github.com/stephenhky/PyRLUtils"

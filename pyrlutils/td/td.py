@@ -2,7 +2,6 @@
 from typing import Annotated
 
 import numpy as np
-from numpy.typing import NDArray
 from npdict import NumpyNDArrayWrappedDict
 
 from .utils import decay_schedule, AbstractTemporalDifferenceLearner, TimeDifferencePathElements
@@ -44,11 +43,11 @@ class SingleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
                 done = self._state.is_terminal
 
                 # td_target = reward + self.gamma * V[new_state_index] * (not done)
-                td_target = reward + self.gamma * V[(new_state_value,)] * (not done)
+                td_target = reward + self.gamma * V[new_state_value] * (not done)
                 # td_error = td_target - V[old_state_index]
-                td_error = td_target - V[(old_state_value,)]
+                td_error = td_target - V[old_state_value]
                 # V[old_state_index] = V[old_state_index] + alphas[i] * td_error
-                V[(old_state_value,)] = V[(old_state_value,)] + alphas[i] * td_error
+                V[(old_state_value,)] = V[old_state_value] + alphas[i] * td_error
 
             # V_track[i, :] = V
             V_track_array[i, :] = V_array
@@ -114,10 +113,10 @@ class MultipleStepTemporalDifferenceLearner(AbstractTemporalDifferenceLearner):
                 estimated_state_value = path[0].this_state_value
                 rewards = np.array([this_moment.reward for this_moment in path])
                 partial_return = discounts[n:] * rewards
-                bs_val = discounts[-1] * V[(new_state_value,)] * (not done)
+                bs_val = discounts[-1] * V[new_state_value] * (not done)
                 ntd_target = np.sum(np.append(partial_return, bs_val))
-                ntd_error = ntd_target - V[(estimated_state_value,)]
-                V[(estimated_state_value,)] = V[(estimated_state_value,)] + alphas[i] * ntd_error
+                ntd_error = ntd_target - V[estimated_state_value]
+                V[(estimated_state_value,)] = V[estimated_state_value] + alphas[i] * ntd_error
                 if len(path) == 1 and path[0].done:
                     path = None
 
