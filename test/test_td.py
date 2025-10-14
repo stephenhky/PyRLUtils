@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 
 from pyrlutils.td.utils import decay_schedule
-from pyrlutils.td.td import SingleStepTemporalDifferenceLearner, MultipleStepTemporalDifferenceLearner
+from pyrlutils.td.state_td import SingleStepTemporalDifferenceLearner, MultipleStepTemporalDifferenceLearner
 from pyrlutils.openai.utils import OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory
 from pyrlutils.policy import DiscreteDeterminsticPolicy
 
