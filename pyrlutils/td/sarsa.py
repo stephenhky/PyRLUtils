@@ -59,7 +59,7 @@ class SARSALearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
 
                 td_target = reward + self.gamma * Q[new_state_value, new_action_value] * (not done)
                 td_error = td_target - Q[old_state_value, action_value]
-                Q[old_state_value, action_value] = V[old_state_value, action_value] + alphas[i] * td_error
+                Q[old_state_value, action_value] = Q[old_state_value, action_value] + alphas[i] * td_error
 
             Q_track_array[i, :, :] = Q_array
             pi_track.append(DiscreteDeterminsticPolicy({
