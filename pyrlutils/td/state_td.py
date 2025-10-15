@@ -39,7 +39,7 @@ class SingleStepTemporalDifferenceLearner(AbstractStateValueFunctionTemporalDiff
 
                 td_target = reward + self.gamma * V[new_state_value] * (not done)
                 td_error = td_target - V[old_state_value]
-                V[(old_state_value,)] = V[old_state_value] + alphas[i] * td_error
+                V[old_state_value] = V[old_state_value] + alphas[i] * td_error
 
             V_track_array[i, :] = V_array
 
