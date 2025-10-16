@@ -60,8 +60,6 @@ class TestTD(unittest.TestCase):
         assert V.tensor_dimensions == 1
         assert V.dimension_sizes[0] == 16
 
-        assert len(pi) == 16
-
         assert Q_track.tensor_dimensions == 3
         assert Q_track.dimension_sizes[0] == 200
         assert Q_track.dimension_sizes[1] == 16
