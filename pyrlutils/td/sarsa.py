@@ -30,7 +30,7 @@ class SARSALearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
             [
                 list(range(episodes)),
                 self._state.get_all_possible_state_values(),
-                self._actions_names
+                self._action_names
             ],
             default_initial_value=0.0
         )
