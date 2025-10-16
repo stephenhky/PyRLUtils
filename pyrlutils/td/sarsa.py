@@ -70,10 +70,10 @@ class SARSALearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
             }))
 
         V_array = np.max(Q_array, axis=1)
-        V = NumpyNDArrayWrappedDict(
-            [self._state.get_all_possible_state_values()]
+        V = NumpyNDArrayWrappedDict.from_numpyarray_given_keywords(
+            [self._state.get_all_possible_state_values()],
+            V_array
         )
-        V._numpyarray = V_array
         pi = DiscreteDeterminsticPolicy({
                 {
                     state_value: select_action(state_value, Q, epsilon=0.0)
