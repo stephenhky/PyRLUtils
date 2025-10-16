@@ -62,23 +62,23 @@ class SARSALearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
                 Q[old_state_value, action_value] = Q[old_state_value, action_value] + alphas[i] * td_error
 
             Q_track_array[i, :, :] = Q_array
-            pi_track.append(DiscreteDeterminsticPolicy({
+            pi_track.append(DiscreteDeterminsticPolicy(
                 {
                     state_value: select_action(state_value, Q, epsilon=0.0)
                     for state_value in self._state.get_all_possible_state_values()
                 }
-            }))
+            ))
 
         V_array = np.max(Q_array, axis=1)
         V = NumpyNDArrayWrappedDict.from_numpyarray_given_keywords(
             [self._state.get_all_possible_state_values()],
             V_array
         )
-        pi = DiscreteDeterminsticPolicy({
+        pi = DiscreteDeterminsticPolicy(
                 {
                     state_value: select_action(state_value, Q, epsilon=0.0)
                     for state_value in self._state.get_all_possible_state_values()
                 }
-        })
+        )
 
         return Q, V, pi, Q_track, pi_track
