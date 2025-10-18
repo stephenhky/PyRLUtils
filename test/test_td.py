@@ -3,8 +3,10 @@ import unittest
 
 import numpy as np
 
+from pyrlutils.td.sarsa import SARSALearner
+from pyrlutils.td.qlearn import QLearner
 from pyrlutils.td.utils import decay_schedule
-from pyrlutils.td.td import SingleStepTemporalDifferenceLearner, MultipleStepTemporalDifferenceLearner
+from pyrlutils.td.state_td import SingleStepTemporalDifferenceLearner, MultipleStepTemporalDifferenceLearner
 from pyrlutils.openai.utils import OpenAIGymDiscreteEnvironmentTransitionProbabilityFactory
 from pyrlutils.policy import DiscreteDeterminsticPolicy
 
@@ -18,6 +20,7 @@ class TestTD(unittest.TestCase):
         self.policy = DiscreteDeterminsticPolicy(actions_dict)
         for i in state.get_all_possible_state_values():
             self.policy.add_deterministic_rule(i, i % 4)
+        self.action_values = list(actions_dict.keys())
 
     def test_decay_schedule(self):
         alphas = decay_schedule(1., 0.2, 0.8, 100)
@@ -29,23 +32,57 @@ class TestTD(unittest.TestCase):
         tdlearner = SingleStepTemporalDifferenceLearner(self.transprobfac, policy=self.policy)
         V, V_track = tdlearner.learn(5)
 
-        assert V.ndim == 1
-        assert V.shape[0] == 16
+        assert V.tensor_dimensions == 1
+        assert V.dimension_sizes[0] == 16
 
-        assert V_track.ndim == 2
-        assert V_track.shape[0] == 5
-        assert V_track.shape[1] == 16
+        assert V_track.tensor_dimensions == 2
+        assert V_track.dimension_sizes[0] == 5
+        assert V_track.dimension_sizes[1] == 16
 
     def test_multiplestep_td_learn(self):
         tdlearner = MultipleStepTemporalDifferenceLearner(self.transprobfac, policy=self.policy)
         V, V_track = tdlearner.learn(5)
 
-        assert V.ndim == 1
-        assert V.shape[0] == 16
+        assert V.tensor_dimensions == 1
+        assert V.dimension_sizes[0] == 16
 
-        assert V_track.ndim == 2
-        assert V_track.shape[0] == 5
-        assert V_track.shape[1] == 16
+        assert V_track.tensor_dimensions == 2
+        assert V_track.dimension_sizes[0] == 5
+        assert V_track.dimension_sizes[1] == 16
+
+    def test_sarsa_learn(self):
+        sarsalearner = SARSALearner(self.transprobfac)
+        Q, V, pi, Q_track, pi_track = sarsalearner.learn(200)
+
+        assert Q.tensor_dimensions == 2
+        assert Q.dimension_sizes[0] == 16
+        assert Q.dimension_sizes[1] == len(self.action_values)
+
+        assert V.tensor_dimensions == 1
+        assert V.dimension_sizes[0] == 16
+
+        assert Q_track.tensor_dimensions == 3
+        assert Q_track.dimension_sizes[0] == 200
+        assert Q_track.dimension_sizes[1] == 16
+        assert Q_track.dimension_sizes[2] == len(self.action_values)
+        assert len(pi_track) == 200
+
+    def test_q_learn(self):
+        qlearner = QLearner(self.transprobfac)
+        Q, V, pi, Q_track, pi_track = qlearner.learn(150)
+
+        assert Q.tensor_dimensions == 2
+        assert Q.dimension_sizes[0] == 16
+        assert Q.dimension_sizes[1] == len(self.action_values)
+
+        assert V.tensor_dimensions == 1
+        assert V.dimension_sizes[0] == 16
+
+        assert Q_track.tensor_dimensions == 3
+        assert Q_track.dimension_sizes[0] == 150
+        assert Q_track.dimension_sizes[1] == 16
+        assert Q_track.dimension_sizes[2] == len(self.action_values)
+        assert len(pi_track) == 150
 
 
 if __name__ == '__main__':
