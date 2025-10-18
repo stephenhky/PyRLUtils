@@ -50,16 +50,18 @@ class SARSALearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
             action_value = select_action(self._state.state_value, Q, epsilons[i])
             while not done:
                 old_state_value = self._state.state_value
-                new_action_value = select_action(self._state.state_value, Q, epsilons[i])
-                new_action_func = self._actions_dict[new_action_value]
-                self._state = new_action_func(self._state)
+                action_func = self._actions_dict[action_value]
+                self._state = action_func(self._state)
                 new_state_value = self._state.state_value
                 reward = self._indrewardfcn(old_state_value, action_value, new_state_value)
                 done = self._state.is_terminal
+                new_action_value = select_action(new_state_value, Q, epsilons[i])
 
                 td_target = reward + self.gamma * Q[new_state_value, new_action_value] * (not done)
                 td_error = td_target - Q[old_state_value, action_value]
                 Q[old_state_value, action_value] = Q[old_state_value, action_value] + alphas[i] * td_error
+
+                action_value = new_action_value
 
             Q_track_array[i, :, :] = Q_array
             pi_track.append(DiscreteDeterminsticPolicy(
