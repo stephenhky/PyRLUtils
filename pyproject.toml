@@ -34,6 +34,7 @@ Issues = "https://github.com/stephenhky/PyRLUtils/issues"
 [tool.setuptools]
 packages = ["pyrlutils", "pyrlutils.bandit", "pyrlutils.openai", "pyrlutils.dp", "pyrlutils.td", "pyrlutils.helpers"]
 zip-safe = false
+package-dir = {"" = "src"}
 
 [project.optional-dependencies]
 openaigym = ["gymnasium"]
