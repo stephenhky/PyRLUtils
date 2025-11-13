@@ -38,4 +38,4 @@ package-dir = {"" = "src"}
 
 [project.optional-dependencies]
 openaigym = ["gymnasium"]
-test = ["unittest"]
+test = ["pytest"]
