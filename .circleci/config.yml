@@ -19,6 +19,7 @@ shared: &shared
           pip install --upgrade --user pip
           pip install --upgrade --user .
           pip install --upgrade --user .[openaigym]
+          pip install --upgrade --user .[test]
 
     - run:
         name: Run Unit Tests
