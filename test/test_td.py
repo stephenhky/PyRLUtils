@@ -30,7 +30,13 @@ class TestTD(unittest.TestCase):
         np.testing.assert_almost_equal(alphas[80:], np.repeat(0.2, 20))
 
     def test_singlestep_td_learn(self):
-        tdlearner = SingleStepTemporalDifferenceLearner(self.transprobfac, policy=self.policy)
+        state, actions_dict, indrewardfcn = self.transprobfac.generate_mdp_objects()
+        tdlearner = SingleStepTemporalDifferenceLearner(
+            state,
+            actions_dict,
+            indrewardfcn,
+            policy = self.policy
+        )
         V, V_track = tdlearner.learn(5)
 
         assert V.tensor_dimensions == 1
@@ -41,7 +47,13 @@ class TestTD(unittest.TestCase):
         assert V_track.dimension_sizes[1] == 16
 
     def test_multiplestep_td_learn(self):
-        tdlearner = MultipleStepTemporalDifferenceLearner(self.transprobfac, policy=self.policy)
+        state, actions_dict, indrewardfcn = self.transprobfac.generate_mdp_objects()
+        tdlearner = MultipleStepTemporalDifferenceLearner(
+            state,
+            actions_dict,
+            indrewardfcn,
+            policy=self.policy
+        )
         V, V_track = tdlearner.learn(5)
 
         assert V.tensor_dimensions == 1
@@ -52,7 +64,8 @@ class TestTD(unittest.TestCase):
         assert V_track.dimension_sizes[1] == 16
 
     def test_sarsa_learn(self):
-        sarsalearner = SARSALearner(self.transprobfac)
+        state, actions_dict, indrewardfcn = self.transprobfac.generate_mdp_objects()
+        sarsalearner = SARSALearner(state, actions_dict, indrewardfcn)
         Q, V, pi, Q_track, pi_track = sarsalearner.learn(200)
 
         assert Q.tensor_dimensions == 2
@@ -69,7 +82,8 @@ class TestTD(unittest.TestCase):
         assert len(pi_track) == 200
 
     def test_q_learn(self):
-        qlearner = QLearner(self.transprobfac)
+        state, actions_dict, indrewardfcn = self.transprobfac.generate_mdp_objects()
+        qlearner = QLearner(state, actions_dict, indrewardfcn)
         Q, V, pi, Q_track, pi_track = qlearner.learn(150)
 
         assert Q.tensor_dimensions == 2
@@ -86,7 +100,8 @@ class TestTD(unittest.TestCase):
         assert len(pi_track) == 150
 
     def test_double_q_learn(self):
-        qlearner = DoubleQLearner(self.transprobfac)
+        state, actions_dict, indrewardfcn = self.transprobfac.generate_mdp_objects()
+        qlearner = DoubleQLearner(state, actions_dict, indrewardfcn)
         Q, V, pi, Q_track, pi_track = qlearner.learn(150)
 
         assert Q.tensor_dimensions == 2

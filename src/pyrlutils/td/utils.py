@@ -7,10 +7,10 @@ import numpy as np
 from numpy.typing import NDArray
 from npdict import NumpyNDArrayWrappedDict
 
-from ..state import DiscreteStateValueType
-from ..action import DiscreteActionValueType
+from ..state import DiscreteStateValueType, DiscreteState
+from ..action import DiscreteActionValueType, Action
 from ..policy import DiscretePolicy
-from ..transition import TransitionProbabilityFactory
+from ..reward import IndividualRewardFunction
 
 
 def decay_schedule(
@@ -60,10 +60,14 @@ class TimeDifferencePathElements:
     done: bool
 
 
+# Note: we must not use TransitionProbabilityFactory as an initial parameter
+
 class AbstractStateValueFunctionTemporalDifferenceLearner(ABC):
     def __init__(
             self,
-            transprobfac: TransitionProbabilityFactory,
+            state: DiscreteState,
+            action_dict: dict[DiscreteActionValueType, Action],
+            individual_rewardfcn: IndividualRewardFunction,
             gamma: float=1.0,
             init_alpha: float=0.5,
             min_alpha: float=0.01,
@@ -79,8 +83,11 @@ class AbstractStateValueFunctionTemporalDifferenceLearner(ABC):
         except AssertionError:
             raise ValueError("alpha_decay_ratio must be between 0 and 1!")
         self._alpha_decay_ratio = alpha_decay_ratio
-        self._transprobfac = transprobfac
-        self._state, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
+        # self._transprobfac = transprobfac
+        # self._state, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
+        self._state = state
+        self._action_dict = action_dict
+        self._indrewardfcn = individual_rewardfcn
         self._action_names = list(self._actions_dict.keys())
         self._actions_to_indices = {action_value: idx for idx, action_value in enumerate(self._action_names)}
         self._policy = policy
@@ -147,7 +154,9 @@ class AbstractStateValueFunctionTemporalDifferenceLearner(ABC):
 class AbstractStateActionValueFunctionTemporalDifferenceLearner(ABC):
     def __init__(
             self,
-            transprobfac: TransitionProbabilityFactory,
+            state: DiscreteState,
+            action_dict: dict[DiscreteActionValueType, Action],
+            individual_rewardfcn: IndividualRewardFunction,
             gamma: float=1.0,
             init_alpha: float=0.5,
             min_alpha: float=0.01,
@@ -170,8 +179,11 @@ class AbstractStateActionValueFunctionTemporalDifferenceLearner(ABC):
         self._min_epsilon = min_epsilon
         self._epsilon_decay_ratio = epsilon_decay_ratio
 
-        self._transprobfac = transprobfac
-        self._state, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
+        # self._transprobfac = transprobfac
+        # self._state, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
+        self._state = state
+        self._action_dict = action_dict
+        self._indrewardfcn = individual_rewardfcn
         self._action_names = list(self._actions_dict.keys())
         self._actions_to_indices = {action_value: idx for idx, action_value in enumerate(self._action_names)}
         self._policy = policy
