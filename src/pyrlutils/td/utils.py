@@ -66,7 +66,7 @@ class AbstractStateValueFunctionTemporalDifferenceLearner(ABC):
     def __init__(
             self,
             state: DiscreteState,
-            action_dict: dict[DiscreteActionValueType, Action],
+            actions_dict: dict[DiscreteActionValueType, Action],
             individual_rewardfcn: IndividualRewardFunction,
             gamma: float=1.0,
             init_alpha: float=0.5,
@@ -86,7 +86,7 @@ class AbstractStateValueFunctionTemporalDifferenceLearner(ABC):
         # self._transprobfac = transprobfac
         # self._state, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
         self._state = state
-        self._action_dict = action_dict
+        self._actions_dict = actions_dict
         self._indrewardfcn = individual_rewardfcn
         self._action_names = list(self._actions_dict.keys())
         self._actions_to_indices = {action_value: idx for idx, action_value in enumerate(self._action_names)}
@@ -155,7 +155,7 @@ class AbstractStateActionValueFunctionTemporalDifferenceLearner(ABC):
     def __init__(
             self,
             state: DiscreteState,
-            action_dict: dict[DiscreteActionValueType, Action],
+            actions_dict: dict[DiscreteActionValueType, Action],
             individual_rewardfcn: IndividualRewardFunction,
             gamma: float=1.0,
             init_alpha: float=0.5,
@@ -182,7 +182,7 @@ class AbstractStateActionValueFunctionTemporalDifferenceLearner(ABC):
         # self._transprobfac = transprobfac
         # self._state, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
         self._state = state
-        self._action_dict = action_dict
+        self._actions_dict = actions_dict
         self._indrewardfcn = individual_rewardfcn
         self._action_names = list(self._actions_dict.keys())
         self._actions_to_indices = {action_value: idx for idx, action_value in enumerate(self._action_names)}
