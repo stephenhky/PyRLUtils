@@ -7,9 +7,8 @@ from typing import Annotated
 import numpy as np
 from numpy.typing import NDArray
 
-from ..state import DiscreteStateValueType, DiscreteState
-from ..action import DiscreteActionValueType, Action
-from ..reward import IndividualRewardFunction
+from ..state import DiscreteStateValueType
+from ..transition import TransitionProbabilityFactory
 from ..policy import DiscreteDeterminsticPolicy
 
 
@@ -17,19 +16,15 @@ class OptimalPolicyOnValueFunctions:
     def __init__(
             self,
             discount_factor: float,
-            state: DiscreteState,
-            actions_dict: dict[DiscreteActionValueType, Action],
-            individual_reward_fcn: IndividualRewardFunction
+            transition_probability_factory: TransitionProbabilityFactory
     ):
         try:
             assert 0. <= discount_factor <= 1.
         except AssertionError:
             raise ValueError('Discount factor must be between 0 and 1.')
         self._gamma = discount_factor
-        # self._states, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
-        self._states = state
-        self._actions_dict = actions_dict
-        self._individual_reward_fcn = individual_reward_fcn
+        self._transprobfac = transition_probability_factory
+        self._states, self._actions_dict, self._indrewardfcn = self._transprobfac.generate_mdp_objects()
         self._state_names = self._states.get_all_possible_state_values()
         self._states_to_indices = {state: idx for idx, state in enumerate(self._state_names)}
         self._action_names = list(self._actions_dict.keys())
