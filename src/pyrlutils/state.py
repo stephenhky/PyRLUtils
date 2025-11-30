@@ -23,6 +23,9 @@ class State(ABC):
 DiscreteStateValueType = Union[str, int, tuple[int], Enum]
 
 
+# class DiscreteState(State):
+#     pass
+
 class DiscreteState(State):
     def __init__(
             self,

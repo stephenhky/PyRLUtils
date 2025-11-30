@@ -303,7 +303,8 @@ class Test2DMaze(unittest.TestCase):
                 assert not self.maze_state.get_whether_terminal_given_coordinates([i, j])
 
     def test_policy_iteration(self):
-        policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
+        states, actions_dict, indrewardfcn = self.transprobfactory.generate_mdp_objects()
+        policy_finder = OptimalPolicyOnValueFunctions(0.85, states, actions_dict, indrewardfcn)
         values_dict, policy = policy_finder.policy_iteration()
 
         for state_value, value in values_dict.items():
@@ -329,7 +330,8 @@ class Test2DMaze(unittest.TestCase):
         assert arrived_destination
 
     def test_value_iteration(self):
-        policy_finder = OptimalPolicyOnValueFunctions(0.85, self.transprobfactory)
+        states, actions_dict, indrewardfcn = self.transprobfactory.generate_mdp_objects()
+        policy_finder = OptimalPolicyOnValueFunctions(0.85, states, actions_dict, indrewardfcn)
         values_dict, policy = policy_finder.value_iteration()
 
         for state_value, value in values_dict.items():
