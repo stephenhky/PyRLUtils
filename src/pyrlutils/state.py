@@ -268,7 +268,7 @@ class ContinuousState(State):
         return True
 
 
-class Discrete2DCartesianState(DiscreteState):
+class Discrete2DCartesianState(DiscreteCategoricalState):
     def __init__(
             self,
             x_lowlim: int,
