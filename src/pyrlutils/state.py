@@ -24,7 +24,7 @@ class State(ABC):
 DiscreteStateValueType = Union[str, int, tuple[int], Enum]
 
 
-class DiscreteState(ABC, State):
+class DiscreteState(State):
     @abstractmethod
     def get_state_value(self) -> Any:
         raise NotImplemented()
