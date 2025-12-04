@@ -1,8 +1,8 @@
 
 import sys
-from abc import ABC
+from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional, Union, Annotated, Literal
+from typing import Optional, Union, Annotated, Literal, Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -16,6 +16,7 @@ from .helpers.exceptions import InvalidRangeError
 
 class State(ABC):
     @property
+    @abstractmethod
     def state_value(self):
         raise NotImplemented()
 
@@ -23,10 +24,30 @@ class State(ABC):
 DiscreteStateValueType = Union[str, int, tuple[int], Enum]
 
 
-# class DiscreteState(State):
-#     pass
+class DiscreteState(ABC, State):
+    @abstractmethod
+    def get_state_value(self) -> Any:
+        raise NotImplemented()
 
-class DiscreteState(State):
+    @abstractmethod
+    def set_state_value(self, val: Any) -> None:
+        raise NotImplemented()
+
+    @property
+    def state_value(self) -> Any:
+        return self.get_state_value()
+
+    @state_value.setter
+    def state_value(self, new_state_value: Any) -> None:
+        self.set_state_value(new_state_value)
+
+    @property
+    @abstractmethod
+    def is_terminal(self) -> bool:
+        raise NotImplemented()
+
+
+class DiscreteCategoricalState(DiscreteState):
     def __init__(
             self,
             all_state_values: list[DiscreteStateValueType],
@@ -81,14 +102,6 @@ class DiscreteState(State):
         if new_index >= len(self._all_state_values):
             raise ValueError(f"Invalid index {new_index}; it must be less than {self.nb_state_values}.")
         self._current_index = new_index
-
-    @property
-    def state_value(self) -> DiscreteStateValueType:
-        return self._all_state_values[self._current_index]
-
-    @state_value.setter
-    def state_value(self, new_state_value: DiscreteStateValueType):
-        self.set_state_value(new_state_value)
 
     @property
     def state_space_size(self):

@@ -1,13 +1,13 @@
 
 import unittest
 
-from pyrlutils.state import DiscreteState
+from pyrlutils.state import DiscreteCategoricalState
 from pyrlutils.action import Action
 
 
 class TestAction(unittest.TestCase):
     def test_deterministic_actions(self):
-        state = DiscreteState([0, 1, 2])
+        state = DiscreteCategoricalState([0, 1, 2])
         actions = {
             'left': Action(lambda state: state.set_state_value((state.state_value-1) % 3)),
             'right': Action(lambda state: state.set_state_value((state.state_value + 1) % 3)),

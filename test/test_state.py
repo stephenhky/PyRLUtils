@@ -4,14 +4,14 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from pyrlutils.state import DiscreteState, ContinuousState, Discrete2DCartesianState
+from pyrlutils.state import DiscreteCategoricalState, ContinuousState, Discrete2DCartesianState
 from pyrlutils.helpers.exceptions import InvalidRangeError
 
 
 class TestState(unittest.TestCase):
     def test_discrete_state(self):
         all_values = ['a', 'b', 'c', 'd']
-        state = DiscreteState(all_values.copy())
+        state = DiscreteCategoricalState(all_values.copy())
 
         assert state.state_value == all_values[0]
         assert state.get_state_value() == state.state_value

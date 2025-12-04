@@ -1,7 +1,7 @@
 
 import unittest
 
-from pyrlutils.state import DiscreteState
+from pyrlutils.state import DiscreteCategoricalState
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
 
 class TestState(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestState(unittest.TestCase):
 
         state, actions, ind_reward_fcn = trans_probs_factory.generate_mdp_objects()
 
-        assert isinstance(state, DiscreteState)
+        assert isinstance(state, DiscreteCategoricalState)
 
         assert len(state.get_all_possible_state_values()) == 3
         assert len(actions) == 2

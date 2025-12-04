@@ -7,7 +7,7 @@ import numpy as np
 from numpy.typing import NDArray
 from npdict import NumpyNDArrayWrappedDict
 
-from ..state import DiscreteStateValueType, DiscreteState
+from ..state import DiscreteStateValueType, DiscreteCategoricalState
 from ..action import DiscreteActionValueType, Action
 from ..policy import DiscretePolicy
 from ..reward import IndividualRewardFunction
@@ -65,7 +65,7 @@ class TimeDifferencePathElements:
 class AbstractStateValueFunctionTemporalDifferenceLearner(ABC):
     def __init__(
             self,
-            state: DiscreteState,
+            state: DiscreteCategoricalState,
             actions_dict: dict[DiscreteActionValueType, Action],
             individual_rewardfcn: IndividualRewardFunction,
             gamma: float=1.0,
@@ -154,7 +154,7 @@ class AbstractStateValueFunctionTemporalDifferenceLearner(ABC):
 class AbstractStateActionValueFunctionTemporalDifferenceLearner(ABC):
     def __init__(
             self,
-            state: DiscreteState,
+            state: DiscreteCategoricalState,
             actions_dict: dict[DiscreteActionValueType, Action],
             individual_rewardfcn: IndividualRewardFunction,
             gamma: float=1.0,

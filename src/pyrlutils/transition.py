@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .state import DiscreteState, DiscreteStateValueType
+from .state import DiscreteCategoricalState, DiscreteStateValueType
 from .reward import IndividualRewardFunction
 from .action import Action, DiscreteActionValueType
 
@@ -74,7 +74,7 @@ class TransitionProbabilityFactory:
             state_nexttuples: dict[DiscreteStateValueType, list[NextStateTuple]]
     ) -> Union[FunctionType, LambdaType]:
 
-        def _action_function(state: DiscreteState) -> DiscreteState:
+        def _action_function(state: DiscreteCategoricalState) -> DiscreteCategoricalState:
             nexttuples = state_nexttuples[state.state_value]
             nextstates = [nexttuple.next_state_value for nexttuple in nexttuples]
             probs = [nexttuple.probability for nexttuple in nexttuples]
@@ -136,8 +136,8 @@ class TransitionProbabilityFactory:
     def transition_probabilities(self) -> dict[DiscreteStateValueType, dict[DiscreteActionValueType, list[NextStateTuple]]]:
         return self._transprobs
 
-    def generate_mdp_objects(self) -> tuple[DiscreteState, dict[DiscreteActionValueType, Action], IndividualRewardFunction]:
-        state = DiscreteState(self._all_state_values)
+    def generate_mdp_objects(self) -> tuple[DiscreteCategoricalState, dict[DiscreteActionValueType, Action], IndividualRewardFunction]:
+        state = DiscreteCategoricalState(self._all_state_values)
         actions_dict = {}
         for action_value in self._all_action_values:
             state_nexttuple = self._get_probs_for_eachstate(action_value)
