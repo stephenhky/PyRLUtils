@@ -24,7 +24,7 @@ class State(ABC):
 DiscreteStateValueType = Union[str, int, tuple[int], Enum]
 
 
-class DiscreteState(State):
+class DiscreteState(State, ABC):
     @abstractmethod
     def get_state_value(self) -> Any:
         raise NotImplemented()
@@ -268,15 +268,22 @@ class ContinuousState(State):
         return True
 
 
-class Discrete2DCartesianState(DiscreteCategoricalState):
+def normalize_cartesian_coordinates(
+        coordinates: Union[list[int], NDArray[np.int64], tuple[int, ...]],
+        nbdims: int
+):
+    pass
+
+
+class Discrete2DCartesianState(DiscreteState):
     def __init__(
             self,
             x_lowlim: int,
             x_hilim: int,
             y_lowlim: int,
-            y_hilim: int,
-            initial_coordinate: list[int]=None,
-            terminals: Optional[dict[DiscreteStateValueType, bool]] = None
+            y_hilim: int,    # np.int is not allowed
+            initial_coordinate: Optional[Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]]]=None,
+            terminal_state_values: Optional[list[Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]]]] = None
     ):
         self._x_lowlim = x_lowlim
         self._x_hilim = x_hilim
@@ -285,9 +292,13 @@ class Discrete2DCartesianState(DiscreteCategoricalState):
         self._countx = self._x_hilim - self._x_lowlim + 1
         self._county = self._y_hilim - self._y_lowlim + 1
         if initial_coordinate is None:
-            initial_coordinate = [self._x_lowlim, self._y_lowlim]
-        initial_value = (initial_coordinate[1] - self._y_lowlim) * self._countx + (initial_coordinate[0] - self._x_lowlim)
-        super().__init__(list(range(self._countx*self._county)), initial_value=initial_value, terminals=terminals)
+            self._state_value = np.array([self._x_lowlim, self._y_lowlim], dtype=np.int64)
+        else:
+            try:
+                assert len(initial_coordinate) == 2
+            except AssertionError:
+                raise ValueError("Initial value must be a length-2 list of integers.")
+            self._state_value = initial_coordinate
 
     def _encode_coordinates(self, x, y) -> int:
         return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
