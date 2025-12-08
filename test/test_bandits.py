@@ -3,8 +3,6 @@ import unittest
 from enum import Enum
 import random
 
-import numpy as np
-
 from pyrlutils.bandit.reward import IndividualBanditRewardFunction
 from pyrlutils.bandit.algo import SimpleBandit, GradientBandit
 

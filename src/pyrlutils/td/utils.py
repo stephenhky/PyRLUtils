@@ -7,7 +7,8 @@ import numpy as np
 from numpy.typing import NDArray
 from npdict import NumpyNDArrayWrappedDict
 
-from ..state import DiscreteStateValueType, DiscreteCategoricalState
+from ..state.utils import DiscreteStateValueType
+from ..state.discrete import DiscreteCategoricalState
 from ..action import DiscreteActionValueType, Action
 from ..policy import DiscretePolicy
 from ..reward import IndividualRewardFunction

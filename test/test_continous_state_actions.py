@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from pyrlutils.state import ContinuousState
+from pyrlutils.state.continuous import ContinuousState
 
 
 class TestContinuousSystem(unittest.TestCase):

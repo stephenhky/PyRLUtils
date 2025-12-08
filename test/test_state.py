@@ -4,7 +4,9 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from pyrlutils.state import DiscreteCategoricalState, ContinuousState, Discrete2DCartesianState
+from pyrlutils.state.discrete import DiscreteCategoricalState
+from pyrlutils.state.continuous import ContinuousState
+from pyrlutils.state.discretecoords import Discrete2DCartesianState
 from pyrlutils.helpers.exceptions import InvalidRangeError
 
 

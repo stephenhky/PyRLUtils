@@ -6,7 +6,8 @@ import numpy as np
 
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
 from pyrlutils.dp.valuefcns import OptimalPolicyOnValueFunctions
-from pyrlutils.state import Discrete2DCartesianState, DiscreteCategoricalState
+from pyrlutils.state.discretecoords import Discrete2DCartesianState
+from pyrlutils.state.discrete import DiscreteCategoricalState
 
 
 class Test2DMaze(unittest.TestCase):

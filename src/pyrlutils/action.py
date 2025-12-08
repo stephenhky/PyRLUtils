@@ -2,7 +2,7 @@
 from types import LambdaType, FunctionType
 from typing import Union
 
-from .state import State
+from .state.utils import State
 
 
 DiscreteActionValueType = Union[float, str]

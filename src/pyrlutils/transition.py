@@ -5,7 +5,8 @@ from dataclasses import dataclass
 import numpy as np
 import numpy.typing as npt
 
-from .state import DiscreteCategoricalState, DiscreteStateValueType
+from .state.discrete import DiscreteCategoricalState
+from .state.utils import DiscreteStateValueType
 from .reward import IndividualRewardFunction
 from .action import Action, DiscreteActionValueType
 

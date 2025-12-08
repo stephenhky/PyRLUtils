@@ -7,7 +7,7 @@ from typing import Annotated
 import numpy as np
 from numpy.typing import NDArray
 
-from ..state import DiscreteStateValueType
+from ..state.utils import DiscreteStateValueType
 from ..transition import TransitionProbabilityFactory
 from ..policy import DiscreteDeterminsticPolicy
 

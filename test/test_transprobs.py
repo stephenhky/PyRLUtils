@@ -1,7 +1,7 @@
 
 import unittest
 
-from pyrlutils.state import DiscreteCategoricalState
+from pyrlutils.state.discrete import DiscreteCategoricalState
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
 
 class TestState(unittest.TestCase):

@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from pyrlutils.state import Discrete2DCartesianState
+from pyrlutils.state.discretecoords import Discrete2DCartesianState
 
 
 class Test2DDiscreteState(unittest.TestCase):

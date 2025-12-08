@@ -6,7 +6,7 @@ from warnings import warn
 import numpy as np
 from numpy.typing import NDArray
 
-from .state import State, DiscreteState, DiscreteStateValueType
+from .state.utils import State, DiscreteState, DiscreteStateValueType
 from .action import Action, DiscreteActionValueType
 
 
