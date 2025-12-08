@@ -353,6 +353,10 @@ class Discrete2DCartesianState(DiscreteState):
     def state_space_size(self) -> int:
         return self._countx * self._county
 
+    @property
+    def is_terminal(self) -> bool:
+        return self.get_whether_terminal_given_coordinates(self.get_state_value())
+
     @deprecated
     def _encode_coordinates(self, x, y) -> int:
         return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
