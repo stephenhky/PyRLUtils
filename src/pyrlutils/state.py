@@ -6,6 +6,7 @@ from typing import Optional, Union, Annotated, Literal, Any
 
 import numpy as np
 from numpy.typing import NDArray
+from deprecation import deprecated
 if sys.version_info < (3, 11):
     from typing_extensions import Self
 else:
@@ -44,6 +45,11 @@ class DiscreteState(State, ABC):
     @property
     @abstractmethod
     def is_terminal(self) -> bool:
+        raise NotImplemented()
+
+    @property
+    @abstractmethod
+    def state_space_size(self) -> int:
         raise NotImplemented()
 
 
@@ -271,8 +277,13 @@ class ContinuousState(State):
 def normalize_cartesian_coordinates(
         coordinates: Union[list[int], NDArray[np.int64], tuple[int, ...]],
         nbdims: int
-):
-    pass
+) -> NDArray[np.int64]:
+    if isinstance(coordinates, np.ndarray) and coordinates.shape == (nbdims,):
+        return coordinates
+    elif (isinstance(coordinates, list) or isinstance(coordinates, tuple)) and len(coordinates) == nbdims and all(map(lambda num: isinstance(num, int), coordinates)):
+        return np.array(coordinates, dtype=np.int64)
+    else:
+        raise TypeError("Given coordinates type not allowed!")
 
 
 class Discrete2DCartesianState(DiscreteState):
@@ -294,41 +305,33 @@ class Discrete2DCartesianState(DiscreteState):
         if initial_coordinate is None:
             self._state_value = np.array([self._x_lowlim, self._y_lowlim], dtype=np.int64)
         else:
-            try:
-                assert len(initial_coordinate) == 2
-            except AssertionError:
-                raise ValueError("Initial value must be a length-2 list of integers.")
-            self._state_value = initial_coordinate
+            self._state_value = normalize_cartesian_coordinates(initial_coordinate, 2)
+        self._terminal_dict = {}
+        if terminal_state_values is not None:
+            for terminal_coordinates in terminal_state_values:
+                self.set_terminal_given_coordinates(terminal_coordinates)
 
-    def _encode_coordinates(self, x, y) -> int:
-        return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
+    def get_state_value(self) -> NDArray[np.int64]:
+        return self._state_value
 
-    def encode_coordinates(self, coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]]) -> int:
-        if isinstance(coordinates, list):
-            assert len(coordinates) == 2
-        return self._encode_coordinates(coordinates[0], coordinates[1])
-
-    def decode_coordinates(self, hashcode) -> list[int]:
-        return [hashcode % self._countx + self._x_lowlim, hashcode // self._countx + self._y_lowlim]
+    def set_state_value(self, val: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]], tuple[int, int]]) -> None:
+        self._state_value = normalize_cartesian_coordinates(val, 2)
 
     def get_whether_terminal_given_coordinates(
             self,
-            coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]]
+            coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]], tuple[int, int]]
     ) -> bool:
-        if isinstance(coordinates, list):
-            assert len(coordinates) == 2
-        hashcode = self._encode_coordinates(coordinates[0], coordinates[1])
-        return self._terminal_dict.get(hashcode, False)
+        normalized_coordinates = normalize_cartesian_coordinates(coordinates, 2)
+        return self._terminal_dict.get(tuple(normalized_coordinates), False)
 
     def set_terminal_given_coordinates(
             self,
-            coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]]],
+            coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]], tuple[int, int]],
             terminal_value: bool
     ) -> None:
-        if isinstance(coordinates, list):
-            assert len(coordinates) == 2
-        hashcode = self._encode_coordinates(coordinates[0], coordinates[1])
-        self._terminal_dict[hashcode] = terminal_value
+        normalized_coordinates = normalize_cartesian_coordinates(coordinates, 2)
+        tupled_normalized_coordinates = tuple(int(num) for num in normalized_coordinates)
+        self._terminal_dict[tupled_normalized_coordinates] = terminal_value
 
     @property
     def x_lowlim(self) -> int:
@@ -345,3 +348,21 @@ class Discrete2DCartesianState(DiscreteState):
     @property
     def y_hilim(self) -> int:
         return self._y_hilim
+
+    @property
+    def state_space_size(self) -> int:
+        return self._countx * self._county
+
+    @deprecated
+    def _encode_coordinates(self, x, y) -> int:
+        return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
+
+    @deprecated
+    def encode_coordinates(self, coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]], tuple[int, int]]) -> int:
+        if isinstance(coordinates, list):
+            assert len(coordinates) == 2
+        return self._encode_coordinates(coordinates[0], coordinates[1])
+
+    @deprecated
+    def decode_coordinates(self, hashcode) -> list[int]:
+        return [hashcode % self._countx + self._x_lowlim, hashcode // self._countx + self._y_lowlim]
