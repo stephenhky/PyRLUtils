@@ -1,6 +1,5 @@
 
-from types import LambdaType, FunctionType
-from typing import Union
+from typing import Union, Callable
 from dataclasses import dataclass
 
 import numpy as np
@@ -73,7 +72,7 @@ class TransitionProbabilityFactory:
     def _generate_action_function(
             self,
             state_nexttuples: dict[DiscreteStateValueType, list[NextStateTuple]]
-    ) -> Union[FunctionType, LambdaType]:
+    ) -> Callable:
 
         def _action_function(state: DiscreteCategoricalState) -> DiscreteCategoricalState:
             nexttuples = state_nexttuples[state.state_value]
