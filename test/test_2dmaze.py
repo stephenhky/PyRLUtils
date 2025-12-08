@@ -2,6 +2,8 @@
 from itertools import product
 import unittest
 
+import numpy as np
+
 from pyrlutils.transition import TransitionProbabilityFactory, NextStateTuple
 from pyrlutils.dp.valuefcns import OptimalPolicyOnValueFunctions
 from pyrlutils.state import Discrete2DCartesianState, DiscreteCategoricalState
@@ -9,277 +11,278 @@ from pyrlutils.state import Discrete2DCartesianState, DiscreteCategoricalState
 
 class Test2DMaze(unittest.TestCase):
     def setUp(self):
-        maze_state = Discrete2DCartesianState(0, 5, 0, 4, initial_coordinate=[0, 0])
+        maze_state = Discrete2DCartesianState(0, 5, 0, 4,
+                                              initial_coordinate=np.array([0, 0], dtype=np.int64))
 
         transprobfactory = TransitionProbabilityFactory()
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([0, 0]),
+            np.array([0, 0], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 0]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([0, 0]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([0, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([0, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 0], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([0, 0], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([0, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([0, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([0, 1]),
+            np.array([0, 1], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 1]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([1, 1]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([0, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([0, 2]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 1], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([1, 1], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([0, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([0, 2], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([0, 2]),
+            np.array([0, 2], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 2]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([0, 2]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([0, 1]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([0, 3]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 2], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([0, 2], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([0, 1], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([0, 3], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([0, 3]),
+            np.array([0, 3], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 3]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([1, 3]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([0, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([0, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 3], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([1, 3], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([0, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([0, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([0, 4]),
+            np.array([0, 4], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([1, 4]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([0, 3]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([0, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 4], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([1, 4], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([0, 3], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([0, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([1, 0]),
+            np.array([1, 0], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([1, 0]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([2, 0]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([1, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([1, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([1, 0], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([2, 0], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([1, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([1, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([1, 1]),
+            np.array([1, 1], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 1]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([1, 1]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([1, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([1, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 1], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([1, 1], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([1, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([1, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([1, 2]),
+            np.array([1, 2], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([1, 2]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([2, 2]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([1, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([1, 3]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([1, 2], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([2, 2], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([1, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([1, 3], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([1, 3]),
+            np.array([1, 3], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 3]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([1, 3]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([1, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([1, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 3], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([1, 3], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([1, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([1, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([1, 4]),
+            np.array([1, 4], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([0, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([1, 4]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([1, 4]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([1, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([0, 4], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([1, 4], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([1, 4], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([1, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([2, 0]),
+            np.array([2, 0], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([1, 0]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([3, 0]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([2, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([2, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([1, 0], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([3, 0], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([2, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([2, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([2, 1]),
+            np.array([2, 1], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([2, 1]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([2, 1]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([2, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([2, 2]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([2, 1], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([2, 1], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([2, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([2, 2], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([2, 2]),
+            np.array([2, 2], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([1, 2]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([2, 2]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([2, 1]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([2, 3]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([1, 2], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([2, 2], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([2, 1], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([2, 3], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([2, 3]),
+            np.array([2, 3], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([2, 3]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([3, 3]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([2, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([2, 3]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([2, 3], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([3, 3], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([2, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([2, 3], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([2, 4]),
+            np.array([2, 4], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([2, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([3, 4]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([2, 4]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([2, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([2, 4], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([3, 4], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([2, 4], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([2, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([3, 0]),
+            np.array([3, 0]),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([2, 0]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([4, 0]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([3, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([3, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([2, 0], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([4, 0], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([3, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([3, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([3, 1]),
+            np.array([3, 1], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([3, 1]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([3, 1]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([3, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([3, 2]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([3, 1], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([3, 1], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([3, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([3, 2], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([3, 2]),
+            np.array([3, 2], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([3, 2]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([4, 2]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([3, 1]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([3, 3]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([3, 2], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([4, 2], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([3, 1], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([3, 3], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([3, 3]),
+            np.array([3, 3], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([2, 3]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([4, 3]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([3, 3]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([3, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([2, 3], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([4, 3], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([3, 3], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([3, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([3, 4]),
+            np.array([3, 4], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([2, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([3, 4]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([3, 3]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([3, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([2, 4], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([3, 4], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([3, 3], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([3, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([4, 0]),
+            np.array([4, 0], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([3, 0]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 0]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([4, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([4, 0]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([3, 0], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 0], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([4, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([4, 0], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([4, 1]),
+            np.array([4, 1], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([4, 1]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 1]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([4, 1]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([4, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([4, 1], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 1], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([4, 1], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([4, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([4, 2]),
+            np.array([4, 2], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([3, 2]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([4, 2]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([4, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([4, 3]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([3, 2], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([4, 2], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([4, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([4, 3], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([4, 3]),
+            np.array([4, 3], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([3, 3]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([4, 3]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([4, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([4, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([3, 3], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([4, 3], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([4, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([4, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([4, 4]),
+            np.array([4, 4], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([4, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([4, 3]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([4, 4]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([4, 4], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 4], dtype=np.int64), 1., 1., True)],
+                'left': [NextStateTuple(np.array([4, 3], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([4, 4], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([5, 0]),
+            np.array([5, 0], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([4, 0]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 0]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([5, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([5, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([4, 0], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 0], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([5, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([5, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([5, 1]),
+            np.array([5, 1], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([4, 1]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 1]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([5, 0]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([5, 1]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([4, 1], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 1], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([5, 0], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([5, 1], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([5, 2]),
+            np.array([5, 2], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([5, 2]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 2]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([5, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([5, 3]), 1., 0., False)]
+                'up': [NextStateTuple(np.array([5, 2], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 2], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([5, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([5, 3], dtype=np.int64), 1., 0., False)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([5, 3]),
+            np.array([5, 3], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([5, 3]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 3]), 1., 0., False)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([5, 2]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)]
+                'up': [NextStateTuple(np.array([5, 3], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 3], dtype=np.int64), 1., 0., False)],
+                'left': [NextStateTuple(np.array([5, 2], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([5, 4], dtype=np.int64), 1., 1., True)]
             }
         )
         transprobfactory.add_state_transitions(
-            maze_state.encode_coordinates([5, 4]),
+            np.array([5, 4], dtype=np.int64),
             {
-                'up': [NextStateTuple(maze_state.encode_coordinates([4, 4]), 1., 0., False)],
-                'down': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)],
-                'left': [NextStateTuple(maze_state.encode_coordinates([5, 3]), 1., 0., False)],
-                'right': [NextStateTuple(maze_state.encode_coordinates([5, 4]), 1., 1., True)]
+                'up': [NextStateTuple(np.array([4, 4], dtype=np.int64), 1., 0., False)],
+                'down': [NextStateTuple(np.array([5, 4], dtype=np.int64), 1., 1., True)],
+                'left': [NextStateTuple(np.array([5, 3], dtype=np.int64), 1., 0., False)],
+                'right': [NextStateTuple(np.array([5, 4], dtype=np.int64), 1., 1., True)]
             }
         )
 
@@ -293,8 +296,8 @@ class Test2DMaze(unittest.TestCase):
                 range(self.maze_state.x_lowlim, self.maze_state.x_hilim + 1),
                 range(self.maze_state.y_lowlim, self.maze_state.y_hilim + 1)
         ):
-            self.maze_state.set_state_value(self.maze_state.encode_coordinates([i, j]))
-            print(f"i: {i}, j: {j}; encoded: {self.maze_state.encode_coordinates([i, j])}; terminal: {self.maze_state.is_terminal}")
+            self.maze_state.set_state_value([i, j])
+            print(f"i: {i}, j: {j}; encoded: {[i, j]}; terminal: {self.maze_state.is_terminal}")
             if (i == self.maze_state.x_hilim) and (j == self.maze_state.y_hilim):
                 assert self.maze_state.is_terminal
                 assert self.maze_state.get_whether_terminal_given_coordinates([i, j])
@@ -308,7 +311,7 @@ class Test2DMaze(unittest.TestCase):
 
         for state_value, value in values_dict.items():
             [x, y] = self.maze_state.decode_coordinates(state_value)
-            print('({}, {}): {}'.format(x, y, value))
+            print(f'({x}, {y}): {value}')
 
         state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
         assert isinstance(state, DiscreteCategoricalState)
@@ -316,12 +319,12 @@ class Test2DMaze(unittest.TestCase):
         arrived_destination = False
         for _ in range(state.state_space_size*2):
             action_value = policy.get_action_value(state.state_value)
-            print('Action value: {}'.format(action_value))
+            print(f'Action value: {action_value}')
             action = policy.get_action(state)
             state = action(state)
 
             coordinates = self.maze_state.decode_coordinates(state.state_value)
-            print('at: {}, {}'.format(coordinates[0], coordinates[1]))
+            print(f'at: {coordinates[0]}, {coordinates[1]}')
             if coordinates[0] == 5 and coordinates[1] == 4:
                 arrived_destination = True
                 break
@@ -334,7 +337,7 @@ class Test2DMaze(unittest.TestCase):
 
         for state_value, value in values_dict.items():
             [x, y] = self.maze_state.decode_coordinates(state_value)
-            print('({}, {}): {}'.format(x, y, value))
+            print(f'({x}, {y}): {value}')
 
         state, actions_dict, _ = self.transprobfactory.generate_mdp_objects()
         assert isinstance(state, DiscreteCategoricalState)
@@ -342,12 +345,12 @@ class Test2DMaze(unittest.TestCase):
         arrived_destination = False
         for _ in range(state.state_space_size*2):
             action_value = policy.get_action_value(state.state_value)
-            print('Action value: {}'.format(action_value))
+            print(f'Action value: {action_value}')
             action = policy.get_action(state)
             state = action(state)
 
             coordinates = self.maze_state.decode_coordinates(state.state_value)
-            print('at: {}, {}'.format(coordinates[0], coordinates[1]))
+            print(f'at: {coordinates[0]}, {coordinates[1]}')
             if coordinates[0] == 5 and coordinates[1] == 4:
                 arrived_destination = True
                 break
