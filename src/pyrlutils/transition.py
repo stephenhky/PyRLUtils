@@ -3,7 +3,6 @@ from types import LambdaType, FunctionType
 from typing import Union
 from dataclasses import dataclass
 
-import nptyping
 import numpy as np
 import numpy.typing as npt
 
@@ -14,7 +13,7 @@ from .action import Action, DiscreteActionValueType
 
 @dataclass
 class NextStateTuple:
-    next_state_value: Union[DiscreteStateValueType, nptyping.NDArray[np.int64]]
+    next_state_value: Union[DiscreteStateValueType, npt.NDArray[np.int64]]
     probability: float
     reward: float
     terminal: bool
