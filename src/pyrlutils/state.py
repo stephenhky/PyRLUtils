@@ -357,16 +357,16 @@ class Discrete2DCartesianState(DiscreteState):
     def is_terminal(self) -> bool:
         return self.get_whether_terminal_given_coordinates(self.get_state_value())
 
-    @deprecated
+    @deprecated(deprecated_in="0.2.0", removed_in="0.3.0", details="No longer encoding coordinates")
     def _encode_coordinates(self, x, y) -> int:
         return (y - self._y_lowlim) * self._countx + (x - self._x_lowlim)
 
-    @deprecated
+    @deprecated(deprecated_in="0.2.0", removed_in="0.3.0", details="No longer encoding coordinates")
     def encode_coordinates(self, coordinates: Union[list[int], Annotated[NDArray[np.int64], Literal["2"]], tuple[int, int]]) -> int:
         if isinstance(coordinates, list):
             assert len(coordinates) == 2
         return self._encode_coordinates(coordinates[0], coordinates[1])
 
-    @deprecated
+    @deprecated(deprecated_in="0.2.0", removed_in="0.3.0", details="No longer encoding coordinates")
     def decode_coordinates(self, hashcode) -> list[int]:
         return [hashcode % self._countx + self._x_lowlim, hashcode // self._countx + self._y_lowlim]
