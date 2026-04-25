@@ -1,3 +1,6 @@
+"""
+Continuous state implementations for reinforcement learning.
+"""
 
 import sys
 from typing import Union, Annotated, Literal, Optional
@@ -14,12 +17,26 @@ from .utils import State
 
 
 class ContinuousState(State):
+    """
+    A continuous state that can take on values in a continuous range (box) in one or more dimensions.
+    """
+
     def __init__(
             self,
             nbdims: int,
             ranges: Union[Annotated[NDArray[np.float64], Literal["2"]], Annotated[NDArray[np.float64], Literal["*", "2"]]],
             init_value: Optional[Union[float, Annotated[NDArray[np.float64], "1D Array"]]] = None
     ):
+        """
+        Initialize the continuous state.
+
+        Args:
+            nbdims: The number of dimensions of the state space.
+            ranges: The ranges for each dimension. 
+                If nbdims == 1, a 1D array of shape (2,) representing [low, high].
+                If nbdims > 1, a 2D array of shape (nbdims, 2) where each row is [low, high] for that dimension.
+            init_value: The initial state value. If None, a random value within the ranges is chosen.
+        """
         super().__init__()
         self._nbdims = nbdims
 
@@ -101,6 +118,16 @@ class ContinuousState(State):
             self._state_value = init_value
 
     def set_state_value(self, state_value: Union[float, Annotated[NDArray[np.float64], "1D Array"]]):
+        """
+        Set the current state value.
+
+        Args:
+            state_value: The state value to set. Must be within the defined ranges.
+
+        Raises:
+            InvalidRangeError: If the state_value is outside the allowed ranges.
+            ValueError: If the state_value does not have the correct dimension.
+        """
         if self._nbdims > 1:
             try:
                 assert state_value.shape[0] == self._nbdims
@@ -120,12 +147,36 @@ class ContinuousState(State):
         self._state_value = state_value
 
     def get_state_value(self) -> Annotated[NDArray[np.float64], "1D Array"]:
+        """
+        Get the current state value.
+
+        Returns:
+            The current state value as a 1D numpy array of length nbdims.
+        """
         return self._state_value
 
     def get_state_value_ranges(self) -> Union[Annotated[NDArray[np.float64], Literal["2"]], Annotated[NDArray[np.float64], Literal["*", "2"]]]:
+        """
+        Get the ranges for each dimension.
+
+        Returns:
+            The ranges array (same as input).
+        """
         return self._ranges
 
     def get_state_value_range_at_dimension(self, dimension: int) -> Annotated[NDArray[np.float64], Literal["2"]]:
+        """
+        Get the range for a specific dimension.
+
+        Args:
+            dimension: The dimension index (0-based).
+
+        Returns:
+            A 1D array of length 2: [low, high] for the given dimension.
+
+        Raises:
+            ValueError: If the dimension is out of bounds.
+        """
         if dimension < self._nbdims:
             return self._ranges[dimension]
         else:
@@ -133,24 +184,66 @@ class ContinuousState(State):
 
     @property
     def ranges(self) -> Union[Annotated[NDArray[np.float64], Literal["2"]], Annotated[NDArray[np.float64], Literal["*", "2"]]]:
+        """
+        Get the ranges for each dimension.
+
+        Returns:
+            The ranges array (same as input).
+        """
         return self.get_state_value_ranges()
 
     @property
     def state_value(self) -> Union[float, NDArray[np.float64]]:
+        """
+        Get the current state value.
+
+        Returns:
+            The current state value (as a float if nbdims==1, or a 1D array if nbdims>1).
+        """
         return self.get_state_value()
 
     @state_value.setter
     def state_value(self, new_state_value):
+        """
+        Set the current state value.
+
+        Args:
+            new_state_value: The new state value to set.
+        """
         self.set_state_value(new_state_value)
 
     @property
     def nbdims(self) -> int:
+        """
+        Get the number of dimensions of the state space.
+
+        Returns:
+            The number of dimensions.
+        """
         return self._nbdims
 
     def __hash__(self):
+        """
+        Hash the state based on its current value.
+
+        Returns:
+            The hash of the state.
+        """
         return hash(tuple(self._state_value))
 
     def __eq__(self, other: Self):
+        """
+        Check if two states are equal based on their current value.
+
+        Args:
+            other: Another state to compare with.
+
+        Returns:
+            True if the states are equal, False otherwise.
+
+        Raises:
+            ValueError: If the two states have different numbers of dimensions.
+        """
         if self.nbdims != other.nbdims:
             raise ValueError(f"The two states have two different dimensions. ({self.nbdims} vs. {other.nbdims})")
         for i in range(self.nbdims):

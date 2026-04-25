@@ -1,3 +1,6 @@
+"""
+SARSA (State-Action-Reward-State-Action) temporal difference learning algorithm.
+"""
 
 from typing import Annotated
 
@@ -9,6 +12,10 @@ from ..policy import DiscreteDeterminsticPolicy
 
 
 class SARSALearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
+    """
+    SARSA learner for discrete state and action spaces.
+    """
+
     def learn(
             self,
             episodes: int
@@ -19,6 +26,20 @@ class SARSALearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
         Annotated[NumpyNDArrayWrappedDict, "3D array"],
         list[DiscreteDeterminsticPolicy]
     ]:
+        """
+        Learn the optimal policy and value functions using SARSA.
+
+        Args:
+            episodes: Number of episodes to run the learning algorithm.
+
+        Returns:
+            A tuple containing:
+                - Q: The learned action-value function (state-action values).
+                - V: The learned state-value function (max over actions of Q).
+                - pi: The learned deterministic policy (greedy policy w.r.t. Q).
+                - Q_track: Tracking of Q values over episodes (shape: [episodes, nb_states, nb_actions]).
+                - pi_track: Tracking of policies over episodes (one policy per episode).
+        """
         Q = NumpyNDArrayWrappedDict(
             [
                 self._state.get_all_possible_state_values(),

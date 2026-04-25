@@ -1,3 +1,6 @@
+"""
+Double Q-learning temporal difference learning algorithm.
+"""
 
 from typing import Annotated
 
@@ -9,6 +12,13 @@ from ..policy import DiscreteDeterminsticPolicy
 
 
 class DoubleQLearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
+    """
+    Double Q-learning learner for discrete state and action spaces.
+    
+    Double Q-learning reduces overestimation bias by maintaining two separate 
+    Q-functions and using one to select the best action and the other to evaluate it.
+    """
+
     def learn(
             self,
             episodes: int
@@ -19,6 +29,20 @@ class DoubleQLearner(AbstractStateActionValueFunctionTemporalDifferenceLearner):
         Annotated[NumpyNDArrayWrappedDict, "3D array"],
         list[DiscreteDeterminsticPolicy]
     ]:
+        """
+        Learn the optimal policy and value functions using Double Q-learning.
+
+        Args:
+            episodes: Number of episodes to run the learning algorithm.
+
+        Returns:
+            A tuple containing:
+                - Q: The learned action-value function (average of two Q-functions).
+                - V: The learned state-value function (max over actions of Q).
+                - pi: The learned deterministic policy (greedy policy w.r.t. Q).
+                - Q_track: Tracking of Q values over episodes (shape: [episodes, nb_states, nb_actions]).
+                - pi_track: Tracking of policies over episodes (one policy per episode).
+        """
         Q1 = NumpyNDArrayWrappedDict(
             [
                 self._state.get_all_possible_state_values(),

@@ -1,3 +1,6 @@
+"""
+Dynamic programming value function algorithms for reinforcement learning.
+"""
 
 import random
 from copy import copy
@@ -13,11 +16,24 @@ from ..policy import DiscreteDeterminsticPolicy
 
 
 class OptimalPolicyOnValueFunctions:
+    """
+    A class for computing optimal policies using dynamic programming methods
+    like policy iteration and value iteration.
+    """
+
     def __init__(
             self,
             discount_factor: float,
             transition_probability_factory: TransitionProbabilityFactory
     ):
+        """
+        Initialize the optimal policy solver.
+
+        Args:
+            discount_factor: The discount factor gamma (must be between 0 and 1).
+            transition_probability_factory: A factory that can generate MDP objects
+                (state, actions, reward function) from transition probabilities.
+        """
         try:
             assert 0. <= discount_factor <= 1.
         except AssertionError:
@@ -37,6 +53,15 @@ class OptimalPolicyOnValueFunctions:
         self._policy_evaluation_maxiter = 10000
 
     def _policy_evaluation(self, policy: DiscreteDeterminsticPolicy) -> Annotated[NDArray[np.float64], "1D Array"]:
+        """
+        Evaluate a policy by computing its state value function.
+
+        Args:
+            policy: The policy to evaluate.
+
+        Returns:
+            A numpy array of state values for each state.
+        """
         prev_V = np.zeros(len(self._states_to_indices))
 
         for _ in range(self._policy_evaluation_maxiter):
@@ -61,6 +86,15 @@ class OptimalPolicyOnValueFunctions:
         return V
 
     def _policy_improvement(self, V: Annotated[NDArray[np.float64], "1D Array"]) -> DiscreteDeterminsticPolicy:
+        """
+        Improve a policy given its state value function.
+
+        Args:
+            V: The state value function for the current policy.
+
+        Returns:
+            An improved deterministic policy.
+        """
         Q = np.zeros((len(self._states_to_indices), len(self._actions_to_indices)))
 
         for state_value in self._state_names:
@@ -84,6 +118,14 @@ class OptimalPolicyOnValueFunctions:
         return optimal_policy
 
     def _policy_iteration(self) -> tuple[Annotated[NDArray[np.float64], "1D Array"], DiscreteDeterminsticPolicy]:
+        """
+        Run policy iteration to find the optimal policy and value function.
+
+        Returns:
+            A tuple containing:
+                - The optimal state value function.
+                - The optimal deterministic policy.
+        """
         policy = DiscreteDeterminsticPolicy(self._actions_dict)
         for state_value in self._state_names:
             policy.add_deterministic_rule(state_value, random.choice(self._action_names))
@@ -101,8 +143,15 @@ class OptimalPolicyOnValueFunctions:
 
         return V, policy
 
-
     def _value_iteration(self) -> tuple[Annotated[NDArray[np.float64], "1D Array"], DiscreteDeterminsticPolicy]:
+        """
+        Run value iteration to find the optimal policy and value function.
+
+        Returns:
+            A tuple containing:
+                - The optimal state value function.
+                - The optimal deterministic policy.
+        """
         V = np.zeros(len(self._state_names))
 
         for _ in range(self._policy_evaluation_maxiter):
@@ -133,6 +182,14 @@ class OptimalPolicyOnValueFunctions:
         return V, policy
 
     def policy_iteration(self) -> tuple[dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
+        """
+        Run policy iteration and return results as dictionaries.
+
+        Returns:
+            A tuple containing:
+                - A dictionary mapping state values to their optimal values.
+                - The optimal deterministic policy.
+        """
         V, policy = self._policy_iteration()
         state_values_dict = {
             self._state_names[i]: V[i]
@@ -141,6 +198,14 @@ class OptimalPolicyOnValueFunctions:
         return state_values_dict, policy
 
     def value_iteration(self) -> tuple[dict[DiscreteStateValueType, float], DiscreteDeterminsticPolicy]:
+        """
+        Run value iteration and return results as dictionaries.
+
+        Returns:
+            A tuple containing:
+                - A dictionary mapping state values to their optimal values.
+                - The optimal deterministic policy.
+        """
         V, policy = self._value_iteration()
         state_values_dict = {
             self._state_names[i]: V[i]

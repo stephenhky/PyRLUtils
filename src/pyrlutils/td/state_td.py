@@ -1,3 +1,6 @@
+"""
+Temporal difference learning algorithms for state value functions.
+"""
 
 from typing import Annotated
 
@@ -8,10 +11,25 @@ from .utils import decay_schedule, TimeDifferencePathElements, AbstractStateValu
 
 
 class SingleStepTemporalDifferenceLearner(AbstractStateValueFunctionTemporalDifferenceLearner):
+    """
+    Single-step temporal difference (TD) learner for state value functions.
+    """
+
     def learn(
             self,
             episodes: int
     ) -> tuple[Annotated[NumpyNDArrayWrappedDict, "1D Array"], Annotated[NumpyNDArrayWrappedDict, "2D Array"]]:
+        """
+        Learn the state value function using single-step TD(0).
+
+        Args:
+            episodes: Number of episodes to run the learning algorithm.
+
+        Returns:
+            A tuple containing:
+                - V: The learned state value function.
+                - V_track: Tracking of V values over episodes (shape: [episodes, nb_states]).
+        """
         V = NumpyNDArrayWrappedDict(
             [self._state.get_all_possible_state_values()],
             default_initial_value=0.0
@@ -47,11 +65,27 @@ class SingleStepTemporalDifferenceLearner(AbstractStateValueFunctionTemporalDiff
 
 
 class MultipleStepTemporalDifferenceLearner(AbstractStateValueFunctionTemporalDifferenceLearner):
+    """
+    Multiple-step temporal difference (TD) learner for state value functions.
+    """
+
     def learn(
             self,
             episodes: int,
-            n_steps: int=3
+            n_steps: int = 3
     ) -> tuple[Annotated[NumpyNDArrayWrappedDict, "1D Array"], Annotated[NumpyNDArrayWrappedDict, "2D Array"]]:
+        """
+        Learn the state value function using multi-step TD.
+
+        Args:
+            episodes: Number of episodes to run the learning algorithm.
+            n_steps: Number of steps to look ahead (default: 3).
+
+        Returns:
+            A tuple containing:
+                - V: The learned state value function.
+                - V_track: Tracking of V values over episodes (shape: [episodes, nb_states]).
+        """
         V = NumpyNDArrayWrappedDict(
             [self._state.get_all_possible_state_values()],
             default_initial_value=0.0

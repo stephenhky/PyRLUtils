@@ -1,3 +1,6 @@
+"""
+Transition probability utilities for Markov Decision Processes.
+"""
 
 from typing import Union, Callable
 from dataclasses import dataclass
@@ -13,6 +16,15 @@ from .action import Action, DiscreteActionValueType
 
 @dataclass
 class NextStateTuple:
+    """
+    Represents a possible next state in a transition.
+
+    Attributes:
+        next_state_value: The value of the next state.
+        probability: The probability of transitioning to this next state.
+        reward: The reward received upon transitioning to this next state.
+        terminal: Whether the next state is terminal.
+    """
     next_state_value: Union[DiscreteStateValueType, npt.NDArray[np.int64]]
     probability: float
     reward: float
@@ -20,7 +32,15 @@ class NextStateTuple:
 
 
 class TransitionProbabilityFactory:
+    """
+    Factory for creating transition probability structures and generating MDP objects.
+
+    This class allows defining state-transition probabilities and rewards, and can
+    generate the corresponding state, action, and reward function objects for an MDP.
+    """
+
     def __init__(self):
+        """Initialize the factory with empty transition structures."""
         self._transprobs = {}
         self._all_state_values = []
         self._all_action_values = []
@@ -31,6 +51,14 @@ class TransitionProbabilityFactory:
             state_value: DiscreteStateValueType,
             action_values_to_next_state: dict[DiscreteActionValueType, Union[list[NextStateTuple], dict]]
     ):
+        """
+        Add transitions for a given state and its actions.
+
+        Args:
+            state_value: The current state value.
+            action_values_to_next_state: A dictionary mapping action values to a list of
+                NextStateTuple objects or dictionaries specifying the transition outcomes.
+        """
         if state_value not in self._all_state_values:
             self._all_state_values.append(state_value)
 
@@ -63,6 +91,15 @@ class TransitionProbabilityFactory:
             self,
             action_value: DiscreteActionValueType
     ) -> dict[DiscreteStateValueType, list[NextStateTuple]]:
+        """
+        Get, for each state, the list of next state tuples for a given action.
+
+        Args:
+            action_value: The action value to filter transitions by.
+
+        Returns:
+            A dictionary mapping state values to lists of NextStateTuple objects.
+        """
         state_nexttuples = {}
         for state_value, action_nexttuples_pair in self._transprobs.items():
             for this_action_value, nexttuples in action_nexttuples_pair.items():
@@ -74,7 +111,15 @@ class TransitionProbabilityFactory:
             self,
             state_nexttuples: dict[DiscreteStateValueType, list[NextStateTuple]]
     ) -> Callable:
+        """
+        Generate a state transition function for a given action.
 
+        Args:
+            state_nexttuples: Mapping from state values to lists of possible next state tuples.
+
+        Returns:
+            A function that takes a state and returns the next state after applying the action.
+        """
         def _action_function(state: DiscreteCategoricalState) -> DiscreteCategoricalState:
             nexttuples = state_nexttuples[state.state_value]
             nextstates = [nexttuple.next_state_value for nexttuple in nexttuples]
@@ -86,7 +131,12 @@ class TransitionProbabilityFactory:
         return _action_function
 
     def _generate_individual_reward_function(self) -> IndividualRewardFunction:
+        """
+        Generate an individual reward function based on the defined transitions.
 
+        Returns:
+            An IndividualRewardFunction instance that computes rewards for state-action-next_state triples.
+        """
         def _individual_reward_function(
                 state_value: DiscreteStateValueType,
                 action_value: DiscreteActionValueType,
@@ -121,6 +171,17 @@ class TransitionProbabilityFactory:
             action_value: DiscreteActionValueType,
             new_state_value: DiscreteStateValueType
     ) -> float:
+        """
+        Get the probability of transitioning from a state-action pair to a specific next state.
+
+        Args:
+            state_value: The current state value.
+            action_value: The action taken.
+            new_state_value: The target next state value.
+
+        Returns:
+            The transition probability (0.0 if the transition is not defined).
+        """
         if state_value not in self._transprobs.keys():
             return 0.
 
@@ -135,9 +196,24 @@ class TransitionProbabilityFactory:
 
     @property
     def transition_probabilities(self) -> dict[DiscreteStateValueType, dict[DiscreteActionValueType, list[NextStateTuple]]]:
+        """
+        Get the full transition probability dictionary.
+
+        Returns:
+            A nested dictionary mapping state values to action values to lists of NextStateTuple objects.
+        """
         return self._transprobs
 
     def generate_mdp_objects(self) -> tuple[DiscreteCategoricalState, dict[DiscreteActionValueType, Action], IndividualRewardFunction]:
+        """
+        Generate MDP objects (state, actions, reward function) from the defined transitions.
+
+        Returns:
+            A tuple containing:
+                - DiscreteCategoricalState: The state object.
+                - dict[DiscreteActionValueType, Action]: Mapping of action values to Action objects.
+                - IndividualRewardFunction: The reward function.
+        """
         state = DiscreteCategoricalState(self._all_state_values)
         actions_dict = {}
         for action_value in self._all_action_values:
@@ -153,4 +229,10 @@ class TransitionProbabilityFactory:
 
     @property
     def objects_generated(self) -> bool:
+        """
+        Check whether MDP objects have been generated.
+
+        Returns:
+            True if generate_mdp_objects has been called, False otherwise.
+        """
         return self._objects_generated
