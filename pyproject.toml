@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyrlutils"
-version = "0.1.2"
+version = "0.1.3"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -38,4 +38,4 @@ package-dir = {"" = "src"}
 
 [project.optional-dependencies]
 openaigym = ["gymnasium"]
-test = ["unittest"]
+test = ["pytest"]

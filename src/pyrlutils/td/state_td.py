@@ -30,7 +30,7 @@ class SingleStepTemporalDifferenceLearner(AbstractStateValueFunctionTemporalDiff
             done = False
             while not done:
                 old_state_value = self._state.state_value
-                action_value = self._policy.get_action_value(self._state.state_value)
+                action_value = self.policy.get_action_value(self._state.state_value)
                 action_func = self._actions_dict[action_value]
                 self._state = action_func(self._state)
                 new_state_value = self._state.state_value
@@ -77,7 +77,7 @@ class MultipleStepTemporalDifferenceLearner(AbstractStateValueFunctionTemporalDi
                 new_state_value = self._state._get_state_value_from_index(self._state.nb_state_values-1)
                 while not done and len(path) < n_steps:
                     old_state_value = self._state.state_value
-                    action_value = self._policy.get_action_value(self._state.state_value)
+                    action_value = self.policy.get_action_value(self._state.state_value)
                     action_func = self._actions_dict[action_value]
                     self._state = action_func(self._state)
                     new_state_value = self._state.state_value
