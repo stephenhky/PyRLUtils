@@ -45,9 +45,9 @@ class SimpleBandit(BanditAlgorithm):
     def _go_one_loop(self):
         r = np.random.uniform()
         if r < self.epsilon:
-            selected_action_idx = np.argmax(self._Q)
-        else:
             selected_action_idx = np.random.choice(range(len(self.action_values)))
+        else:
+            selected_action_idx = np.argmax(self._Q)
         reward = self.reward_function(self.action_values[selected_action_idx])
         self._N[selected_action_idx] += 1
         self._Q[selected_action_idx] += (reward - self._Q[selected_action_idx]) / self._N[selected_action_idx]
