@@ -39,37 +39,37 @@ class DeterministicPolicy(Policy):
 
 class DiscreteDeterminsticPolicy(DeterministicPolicy):
     def __init__(self, actions_dict: dict[DiscreteActionValueType, Action]):
-        self._state_to_action = {}
-        self._actions_dict = actions_dict
+        self.state_to_action = {}
+        self.actions_dict = actions_dict
 
     def add_deterministic_rule(
             self,
             state_value: DiscreteStateValueType,
             action_value: DiscreteActionValueType
     ) -> None:
-        if state_value in self._state_to_action:
+        if state_value in self.state_to_action:
             warn('State value {} exists in rule; it will be replaced.'.format(state_value))
-        self._state_to_action[state_value] = action_value
+        self.state_to_action[state_value] = action_value
 
     def get_action_value(
             self,
             state_value: DiscreteStateValueType
     ) -> DiscreteActionValueType:
-        return self._state_to_action.get(state_value)
+        return self.state_to_action.get(state_value)
 
     def get_action(self, state: DiscreteState) -> Action:
-        return self._actions_dict[self.get_action_value(state.state_value)]
+        return self.actions_dict[self.get_action_value(state.state_value)]
 
     def __eq__(self, other) -> bool:
-        if len(self._state_to_action) != len(set(self._state_to_action.keys()).union(other._state_to_action.keys())):
+        if len(self.state_to_action) != len(set(self.state_to_action.keys()).union(other.state_to_action.keys())):
             return False
-        if len(self._actions_dict) != len(set(self._actions_dict.keys()).union(other._actions_dict.keys())):
+        if len(self.actions_dict) != len(set(self.actions_dict.keys()).union(other.actions_dict.keys())):
             return False
-        for action in self._actions_dict.keys():
-            if self._actions_dict[action] != other._actions_dict[action]:
+        for action in self.actions_dict.keys():
+            if self.actions_dict[action] != other.actions_dict[action]:
                 return False
-        for state in self._state_to_action.keys():
-            if self._state_to_action[state] != other._state_to_action[state]:
+        for state in self.state_to_action.keys():
+            if self.state_to_action[state] != other.state_to_action[state]:
                 return False
         return True
 
@@ -92,8 +92,8 @@ class StochasticPolicy(Policy):
 
 class DiscreteStochasticPolicy(StochasticPolicy):
     def __init__(self, actions_dict: dict[DiscreteActionValueType, Action]):
-        self._state_to_action = {}
-        self._actions_dict = actions_dict
+        self.state_to_action = {}
+        self.actions_dict = actions_dict
 
     def add_stochastic_rule(
             self,
@@ -107,9 +107,9 @@ class DiscreteStochasticPolicy(StochasticPolicy):
         else:
             probs = np.repeat(1./len(action_values), len(action_values))
 
-        if state_value in self._state_to_action:
+        if state_value in self.state_to_action:
             warn('State value {} exists in rule; it will be replaced.'.format(state_value))
-        self._state_to_action[state_value] = {
+        self.state_to_action[state_value] = {
             action_value: prob
             for action_value, prob in zip(action_values, probs)
         }
@@ -119,21 +119,21 @@ class DiscreteStochasticPolicy(StochasticPolicy):
             state_value: DiscreteStateValueType,
             action_value: DiscreteActionValueType
     ) -> float:
-        if state_value not in self._state_to_action:
+        if state_value not in self.state_to_action:
             return 0.0
-        if action_value in self._state_to_action[state_value]:
-            return self._state_to_action[state_value][action_value]
+        if action_value in self.state_to_action[state_value]:
+            return self.state_to_action[state_value][action_value]
         else:
             return 0.0
 
     def get_action_value(self, state: State) -> DiscreteActionValueType:
-        allowed_actions = list(self._state_to_action[state].keys())
-        probs = np.array(list(self._state_to_action[state].values()))
+        allowed_actions = list(self.state_to_action[state].keys())
+        probs = np.array(list(self.state_to_action[state].values()))
         sumprobs = np.sum(probs)
         return np.random.choice(allowed_actions, p=probs/sumprobs)
 
     def get_action(self, state: DiscreteState) -> Action:
-        return self._actions_dict[self.get_action_value(state.state_value)]
+        return self.actions_dict[self.get_action_value(state.state_value)]
 
 
 class ContinuousStochasticPolicy(StochasticPolicy):
