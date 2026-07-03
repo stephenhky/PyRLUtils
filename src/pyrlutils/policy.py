@@ -13,24 +13,25 @@ from .action import Action, DiscreteActionValueType
 class Policy(ABC):
     @abstractmethod
     def get_action(self, state: State) -> Action:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @abstractmethod
     def get_action_value(self, state: State) -> DiscreteActionValueType:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def __call__(self, state: State) -> Action:
         return self.get_action(state)
 
     @property
+    @abstractmethod
     def is_stochastic(self) -> bool:
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class DeterministicPolicy(Policy):
     @abstractmethod
     def add_deterministic_rule(self, *args, **kwargs):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     def is_stochastic(self) -> bool:
@@ -77,13 +78,13 @@ class DiscreteDeterminsticPolicy(DeterministicPolicy):
 class DiscreteContinuousPolicy(DeterministicPolicy):
     @abstractmethod
     def get_action(self, state: State) -> Action:
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class StochasticPolicy(Policy):
     @abstractmethod
     def get_probability(self, *args, **kwargs) -> float:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     def is_stochastic(self) -> bool:
@@ -144,7 +145,7 @@ class ContinuousStochasticPolicy(StochasticPolicy):
             action_value: DiscreteActionValueType,
             value: Union[float, Annotated[NDArray[np.float64], "1D Array"]]
     ) -> float:
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 DiscretePolicy = Union[DiscreteDeterminsticPolicy, DiscreteStochasticPolicy]
