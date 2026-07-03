@@ -1,6 +1,6 @@
 
 import sys
-from abc import ABC
+from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Optional, Union, Annotated, Literal
 
@@ -16,8 +16,9 @@ from .helpers.exceptions import InvalidRangeError
 
 class State(ABC):
     @property
+    @abstractmethod
     def state_value(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 DiscreteStateValueType = Union[str, int, tuple[int], Enum]
